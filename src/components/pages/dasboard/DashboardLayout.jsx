@@ -5,7 +5,7 @@ import { Outlet, useLocation } from "react-router-dom";
 export default function DashboardLayout() {
   const location = useLocation();
   const getTitle = () => {
-    if (location.pathname.includes("user")) return "Data User";
+    if (location.pathname.includes("pegawai")) return "Data Pegawai";
     if (location.pathname.includes("riwayat")) return "Riwayat Absensi";
     if (location.pathname.includes("laporan")) return "Laporan";
     return "Dashboard";
@@ -19,7 +19,7 @@ export default function DashboardLayout() {
           <h1 className="text-xl font-bold">{getTitle()}</h1>
         </header>
         <main className="flex-1 p-6">
-          <div className="border p-4">
+          <div className="p-4">
             <Outlet />
           </div>
         </main>

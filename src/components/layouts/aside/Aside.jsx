@@ -4,7 +4,7 @@ import { NavLink } from "react-router-dom";
 export default function Aside() {
   const menus = [
     { path: "/dashboard", label: "Dashboard" },
-    { path: "/dashboard/user", label: "Data User" },
+    { path: "/dashboard/pegawai", label: "Data Pegawai" },
     { path: "/dashboard/riwayat", label: "Riwayat Absensi" },
     { path: "/dashboard/laporan", label: "Laporan" },
   ];

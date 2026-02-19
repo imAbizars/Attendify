@@ -25,7 +25,7 @@ export default function App(){
           </Route>
             <Route path="/dashboard" element={<DashboardLayout />}>
               <Route index element={<Dashboard/>} /> 
-              <Route path="user" element={<DataUser />} />
+              <Route path="pegawai" element={<DataUser />} />
               <Route path="riwayat" element={<Riwayat />} />
             </Route>
 
