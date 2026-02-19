@@ -4,12 +4,7 @@ export default function Dashboard(){
             <div className="border p-4 rounded">
                 Total User: 120
             </div>
-            <div className="border p-4 rounded">
-                Absen Hari Ini: 87
-            </div>
-            <div className="border p-4 rounded">
-                Izin: 12
-            </div>
+            
         </div>
     )
 }
