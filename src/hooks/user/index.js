@@ -1,3 +1,3 @@
 export * from "./getAllUser";
-export * from "./registerUser";
+export * from "./createUser";
 export * from "./deleteUser";
