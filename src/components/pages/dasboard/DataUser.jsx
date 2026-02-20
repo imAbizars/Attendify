@@ -17,7 +17,7 @@ export default function DataUser(){
 
     if (isLoading) return <p>Loading...</p>;
     if (isError) return <p>Error ambil data</p>;
-
+    // todo refetch data user ketika data user di tambahkan
     return (
         <div className=""> 
             <div className="flex justify-end mb-6">
