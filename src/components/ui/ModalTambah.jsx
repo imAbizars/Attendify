@@ -19,7 +19,7 @@ export default function ModalTambah({ onClose }) {
     address: "",
     role: "",
   });
-
+  //createuser
   const { mutate, isPending } = createUser({
     onSuccess: () => {
       alert("User berhasil ditambahkan");
@@ -27,7 +27,7 @@ export default function ModalTambah({ onClose }) {
     },
   });
 
-  const handleChange = (e) => {
+  const handleChange = (e) => { 
     setForm({
       ...form,
       [e.target.name]: e.target.value,
@@ -39,10 +39,10 @@ export default function ModalTambah({ onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-      <Card className="w-full max-w-sm bg-white p-4">
+    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+      <Card className="w-full max-w-sm bg-white p-4 mt-6">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold">Tambah User</h2>
+          <h2 className="text-lg font-bold">Tambah User</h2>
           <Button onClick={onClose}>
             ✕
           </Button>

@@ -1,12 +1,18 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "@/lib/axios/axios";
-import { useMutation } from "@tanstack/react-query";
 
-export const createUser = ({onSuccess})=>{
-    return useMutation({
-        mutationFn : async (body) => {
-            const responseData = await axiosInstance.post("/user",body);
-            return responseData;
-        },
-        onSuccess
-    });
+export const createUser = ({ onSuccess }) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (data) => {
+      const res = await axiosInstance.post("/user", data);
+      return res.data;
+    },
+
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["fetch.user"] });
+      onSuccess?.(data);
+    },
+  });
 };
