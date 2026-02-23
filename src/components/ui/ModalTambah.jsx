@@ -9,7 +9,7 @@ import {
 import { Button } from "./button";
 import { Input } from "./input";
 
-export default function ModalTambah({ onClose }) {
+export default function ModalTambah({ onClose,onSuccess}) {
 
   const [form, setForm] = useState({
     name: "",
@@ -22,8 +22,7 @@ export default function ModalTambah({ onClose }) {
   //createuser
   const { mutate, isPending } = createUser({
     onSuccess: () => {
-      alert("User berhasil ditambahkan");
-      onClose();
+      onSuccess();
     },
   });
 

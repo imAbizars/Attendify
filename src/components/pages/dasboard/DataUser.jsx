@@ -14,22 +14,37 @@ import ModalTambah from "@/components/ui/ModalTambah";
 import { deleteUser } from "@/hooks/user/index";
 import AlertCostum from "@/components/ui/AlertCostum";
 import { Alert,AlertDescription} from "@/components/ui/alert";
+import {CircleCheck} from "lucide-react";
 export default function DataUser(){
 
-    const { data: users, isLoading, isError } = getAllUser({});
+    const { data: users, isLoading, isError } = getAllUser({}); 
     const [openModalTambah,setOpenModalTambah] = useState(false);
-    const [showAlert, setShowAlert] = useState(false);
+    
+    //alert
+    const [alert, setAlert] = useState(null);
+    const [isLeaving, setIsLeaving] = useState(false);   
+    const showAlert = (message) => {
+        setIsLeaving(false);
+        setAlert({ message });
+        
+        setTimeout(() => {
+            setIsLeaving(true); 
+            setTimeout(() => setAlert(null), 300); 
+        }, 2000);
+    };
+
     const { mutate: deleteMutate, isPending: isDeleting } = deleteUser({
-        onSuccess: () => {
-            setShowAlert(true);
-            setTimeout(() => setShowAlert(false), 2000);
-        },
-    })
+        onSuccess: () => showAlert('Data berhasil dihapus'),
+    });
+
+    const handleSuccessTambah = () => {
+        showAlert('Data berhasil ditambahkan');
+    };
 
     const handleDelete = (id) => {
             deleteMutate(id);
     };
-
+    
 
     const renderUserData = () => {
         return users?.map((user) => (
@@ -55,7 +70,6 @@ export default function DataUser(){
             </TableRow>
         ));
     };
-    // todo refetch data user ketika data user di tambahkan 
     return (
         <div className=""> 
             <div className="flex justify-between mb-6 items-center">
@@ -86,17 +100,26 @@ export default function DataUser(){
                 
             </Table>
             {openModalTambah && (
-                <ModalTambah onClose={() => setOpenModalTambah(false)} />
+                <ModalTambah 
+                onClose={() => setOpenModalTambah(false)}
+                onSuccess={handleSuccessTambah}
+                />
             )}
-            {showAlert && (
-                <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-                    <Alert className="w-96 bg-white shadow-xl">
-                    <AlertDescription className="text-black">
-                        Data berhasil dihapus
-                    </AlertDescription>
+            {
+                alert &&(
+                <div className="flex fixed top-2 left-1/2 -translate-x-1/2 z-[999]">
+                    <Alert className={`bg-white shadow-xl ${isLeaving?'animate-slideUp':'animate-slideDown'} `}>
+                        <CircleCheck strokeWidth={3.5}/>
+                        <AlertDescription className="font-bold text-base">
+                            {alert.message}
+                        </AlertDescription>
                     </Alert>
                 </div>
-            )}
+
+                )
+            }
+        
+
         </div>
     )
 }

@@ -61,8 +61,19 @@
   --shadow-shadow: var(--shadow);
   --font-weight-base: 500;
   --font-weight-heading: 700;
+  --animate-slideDown: slideDown 0.4s ease-out;
+  --animate-slideUp : slideUp 0.4s ease-in forwards;        
+
 }
-  
+@keyframes slideDown {
+    0% { transform: translateY(-20px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+}
+@keyframes slideUp {
+    0% { transform: translateY(0); opacity: 1; }
+    100% { transform: translateY(-20px); opacity: 0; }
+}
+
 @layer base {
   body {
     @apply text-foreground font-base bg-background;

@@ -12,6 +12,7 @@ export const createUser = ({ onSuccess }) => {
 
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["fetch.user"] });
+
       onSuccess?.(data);
     },
   });

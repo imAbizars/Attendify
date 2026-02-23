@@ -5,12 +5,12 @@ import * as React from "react"
 import { cn } from "@/lib/utils"
 
 const alertVariants = cva(
-  "relative w-full rounded-base border-2 border-border px-4 py-3 text-sm grid has-[>svg]:grid-cols-[calc(var(--spacing)*4)_1fr] grid-cols-[0_1fr] has-[>svg]:gap-x-3 gap-y-0.5 items-start [&>svg]:size-4 [&>svg]:translate-y-0.5 [&>svg]:text-current shadow-shadow",
+  "relative w-full rounded-lg border-2 border-border px-4 py-3 text-lg grid has-[>svg]:grid-cols-[calc(var(--spacing)*4)_1fr] grid-cols-[0_1fr] has-[>svg]:gap-x-2.5 gap-y-0.5 items-start [&>svg]:size-5 [&>svg]:translate-y-0.5 [&>svg]:text-[#82ff05] shadow-shadow animation-slideDown items-center",
   {
     variants: {
       variant: {
-        default: "bg-main text-white",
-        destructive: "bg-black text-white",
+        default: "bg-main text-black",
+        destructive: "bg-black text-black",
         
       },
     },
