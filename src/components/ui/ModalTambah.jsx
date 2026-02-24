@@ -5,7 +5,14 @@ import {
   Card,
   CardContent
 } from "./card";
-
+import { 
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue, } from "./select";
 import { Button } from "./button";
 import { Input } from "./input";
 
@@ -32,7 +39,12 @@ export default function ModalTambah({ onClose,onSuccess}) {
       [e.target.name]: e.target.value,
     });
   };
-
+  const handleSelectChange = (value)=>{
+     setForm({
+          ...form,
+          role : value,
+     })
+  }
   const handleSubmit = () => {
     mutate(form);
   };
@@ -57,15 +69,25 @@ export default function ModalTambah({ onClose,onSuccess}) {
           />
           <Input
             name="phonenumber"
-            placeholder="Phone Number"
+            placeholder="No Telepon"
             onChange={handleChange}
           />
           <Input
             name="address"
-            placeholder="Address"
+            placeholder="Alamat"
             onChange={handleChange}
           />
-          <Input name="role" placeholder="Role" onChange={handleChange} />
+          <Select onValueChange={handleSelectChange}>
+               <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="Select Role" />
+               </SelectTrigger>
+               <SelectContent>
+                    <SelectGroup>
+                         <SelectItem value="ADMIN">ADMIN</SelectItem>
+                         <SelectItem value="EMPLOYED">EMPLOYED</SelectItem>
+                    </SelectGroup>
+               </SelectContent>
+          </Select>
           <div className="flex justify-end space-x-2 pt-2">
             <Button variant="neutral" onClick={onClose}>
               Batal
