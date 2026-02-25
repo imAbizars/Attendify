@@ -14,12 +14,14 @@ import ModalTambah from "@/components/ui/ModalTambah";
 import { deleteUser } from "@/hooks/user/index";
 import AlertCostum from "@/components/ui/AlertCostum";
 import { Alert,AlertDescription} from "@/components/ui/alert";
-import {CircleCheck,Trash2,PenBox} from "lucide-react";
+import {CircleCheck,Trash2,PenBox,Search} from "lucide-react";
 export default function DataUser(){
 
     const { data: users, isLoading, isError } = getAllUser({}); 
     const [openModalTambah,setOpenModalTambah] = useState(false);
     const [selectedUser,setselectedUser] = useState(null);
+    const [search,setSearch]= useState("");
+    const [searchQuery, setSearchQuery] = useState("");
     //alert
     const [alert, setAlert] = useState(null);
     const [isLeaving, setIsLeaving] = useState(false);   
@@ -48,9 +50,13 @@ export default function DataUser(){
     const handleSuccessEdit = ()=>{
         showAlert('Data Berhasil diupdate');
     }
+    //handle search
+    const filteredUsersSearch = users?.filter((user)=>
+        user.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
     //render data
     const renderUserData = () => {
-        return users?.map((user) => (
+        return filteredUsersSearch?.map((user) => (
             <TableRow key={user.id}>
                 <TableCell>{user.name}</TableCell>
                 <TableCell>{user.email}</TableCell>
@@ -87,8 +93,16 @@ export default function DataUser(){
                 onClick={() => setOpenModalTambah(true)}
                 >Tambah User</Button>
                 <div className="flex items-center space-x-4">
-                    <Button className="bg-main-foreground">Cari</Button>
-                    <Input className="w-60 h-11"/>
+                    <Button 
+                    className="bg-main-foreground"
+                    onClick={()=>setSearchQuery(search)}
+                    >Cari</Button>
+                    <Input 
+                    className="w-60 h-11" 
+                    placeholder="Search by nama"
+                    value={search}
+                    onChange={(e)=>setSearch(e.target.value)}
+                    />
                 </div>
             </div>
             <Table>
@@ -104,7 +118,15 @@ export default function DataUser(){
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {renderUserData()}
+                    {filteredUsersSearch?.length === 0 
+                        ? <TableRow><TableCell colSpan={7} className="text-center ">
+                                <div className="flex items-center justify-center gap-2">
+                                    <Search size={20}/>
+                                    Data Tidak Ditemukan
+                                </div>
+                            </TableCell></TableRow>
+                        : renderUserData()
+                    }
                 </TableBody>
                 
             </Table>
