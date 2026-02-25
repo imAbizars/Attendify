@@ -14,12 +14,12 @@ import ModalTambah from "@/components/ui/ModalTambah";
 import { deleteUser } from "@/hooks/user/index";
 import AlertCostum from "@/components/ui/AlertCostum";
 import { Alert,AlertDescription} from "@/components/ui/alert";
-import {CircleCheck} from "lucide-react";
+import {CircleCheck,Trash2,PenBox} from "lucide-react";
 export default function DataUser(){
 
     const { data: users, isLoading, isError } = getAllUser({}); 
     const [openModalTambah,setOpenModalTambah] = useState(false);
-    
+    const [selectedUser,setselectedUser] = useState(null);
     //alert
     const [alert, setAlert] = useState(null);
     const [isLeaving, setIsLeaving] = useState(false);   
@@ -36,16 +36,19 @@ export default function DataUser(){
     const { mutate: deleteMutate, isPending: isDeleting } = deleteUser({
         onSuccess: () => showAlert('Data berhasil dihapus'),
     });
-
+    //handle tambah
     const handleSuccessTambah = () => {
         showAlert('Data berhasil ditambahkan');
     };
-
+    //handle delete
     const handleDelete = (id) => {
             deleteMutate(id);
     };
-    
-
+    //hande edit
+    const handleSuccessEdit = ()=>{
+        showAlert('Data Berhasil diupdate');
+    }
+    //render data
     const renderUserData = () => {
         return users?.map((user) => (
             <TableRow key={user.id}>
@@ -56,13 +59,19 @@ export default function DataUser(){
                 <TableCell>{user.address}</TableCell>
                 <TableCell>{user.role}</TableCell>
                 <TableCell className="flex justify-center space-x-4">
-                    <Button className="bg-chart-2">Edit</Button>
+                    <Button 
+                    className="bg-chart-2"
+                    onClick={()=>{
+                        setselectedUser(user);
+                        setOpenModalTambah(true);
+                    }}
+                    ><PenBox/></Button>
                     <AlertCostum onConfirm={() => handleDelete(user.id)}>
                         <Button
                             className="bg-chart-4"
                             disabled={isDeleting}
                         >
-                            Hapus
+                        <Trash2/>
                         </Button>
                     </AlertCostum>
 
@@ -101,8 +110,12 @@ export default function DataUser(){
             </Table>
             {openModalTambah && (
                 <ModalTambah 
-                onClose={() => setOpenModalTambah(false)}
-                onSuccess={handleSuccessTambah}
+                onClose={() => {
+                    setOpenModalTambah(false);
+                    setselectedUser(null);
+                }}
+                onSuccess={selectedUser?handleSuccessEdit:handleSuccessTambah}
+                selectedUser={selectedUser}
                 />
             )}
             {
