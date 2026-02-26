@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { 
     Table,
     TableBody,
@@ -14,14 +14,18 @@ import ModalTambah from "@/components/ui/ModalTambah";
 import { deleteUser } from "@/hooks/user/index";
 import AlertCostum from "@/components/ui/AlertCostum";
 import { Alert,AlertDescription} from "@/components/ui/alert";
-import {CircleCheck,Trash2,PenBox,Search} from "lucide-react";
-export default function DataUser(){
+import {CircleCheck,Trash2,PenBox,Search,Loader2} from "lucide-react";
+export default function DataUser(){ 
 
     const { data: users, isLoading, isError } = getAllUser({}); 
     const [openModalTambah,setOpenModalTambah] = useState(false);
+    
+    //selected user
     const [selectedUser,setselectedUser] = useState(null);
+    //search
     const [search,setSearch]= useState("");
     const [searchQuery, setSearchQuery] = useState("");
+
     //alert
     const [alert, setAlert] = useState(null);
     const [isLeaving, setIsLeaving] = useState(false);   
@@ -34,7 +38,22 @@ export default function DataUser(){
             setTimeout(() => setAlert(null), 300); 
         }, 2000);
     };
-
+    //handle search
+    const filteredUsersSearch = users?.filter((user)=>
+        user.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [searchQuery]);
+    //pagination
+    const [currentPage,setCurrentPage] = useState(1);
+    const itemsPerPages = 5;
+    const totalPages = Math.ceil((filteredUsersSearch?.length||0)/itemsPerPages);
+    //slice data halaman
+    const paginatedHalaman = filteredUsersSearch?.slice(
+        (currentPage-1) * itemsPerPages,
+        currentPage * itemsPerPages
+    )
     const { mutate: deleteMutate, isPending: isDeleting } = deleteUser({
         onSuccess: () => showAlert('Data berhasil dihapus'),
     });
@@ -50,13 +69,9 @@ export default function DataUser(){
     const handleSuccessEdit = ()=>{
         showAlert('Data Berhasil diupdate');
     }
-    //handle search
-    const filteredUsersSearch = users?.filter((user)=>
-        user.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
     //render data
     const renderUserData = () => {
-        return filteredUsersSearch?.map((user) => (
+        return paginatedHalaman?.map((user) => (
             <TableRow key={user.id}>
                 <TableCell>{user.name}</TableCell>
                 <TableCell>{user.email}</TableCell>
@@ -96,7 +111,7 @@ export default function DataUser(){
                     <Button 
                     className="bg-main-foreground"
                     onClick={()=>setSearchQuery(search)}
-                    >Cari</Button>
+                    ><Search strokeWidth={3}/></Button>
                     <Input 
                     className="w-60 h-11" 
                     placeholder="Search by nama"
@@ -118,18 +133,63 @@ export default function DataUser(){
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {filteredUsersSearch?.length === 0 
-                        ? <TableRow><TableCell colSpan={7} className="text-center ">
+                    {isLoading? (
+                        <TableRow>
+                            <TableCell colSpan={7}>
+                                <div className="flex items-center justify-center gap-2 py-4">
+                                    <Loader2 className="animate-spin" size={20}/>
+                                    <span>Memuat data...</span>
+                                </div>
+                            </TableCell>
+                        </TableRow>
+                    ) : filteredUsersSearch?.length === 0 ? (
+                        <TableRow>
+                            <TableCell colSpan={7}>
                                 <div className="flex items-center justify-center gap-2">
                                     <Search size={20}/>
-                                    Data Tidak Ditemukan
+                                    <span>Data Tidak Ditemukan</span>
                                 </div>
-                            </TableCell></TableRow>
-                        : renderUserData()
-                    }
+                            </TableCell>
+                        </TableRow>
+                    ) : (
+                        // Render data
+                        renderUserData()
+                    )}
                 </TableBody>
                 
             </Table>
+            <div className="flex items-center justify-between mt-4">
+                <span className="text-sm">
+                    Halaman {currentPage} dari {totalPages}
+                </span>
+                <div className="flex items-center gap-2">
+                    <Button
+                        className="bg-main-foreground"
+                        onClick={() => setCurrentPage((prev) => prev - 1)}
+                        disabled={currentPage === 1}
+                    >
+                        Sebelumnya
+                    </Button>
+
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                        <Button
+                            key={page}
+                            onClick={() => setCurrentPage(page)}
+                            className={currentPage === page ? "bg-main-foreground" : "bg-white text-black"}
+                        >
+                            {page}
+                        </Button>
+                    ))}
+
+                    <Button
+                        className="bg-main-foreground"
+                        onClick={() => setCurrentPage((prev) => prev + 1)}
+                        disabled={currentPage === totalPages}
+                    >
+                        Selanjutnya
+                    </Button>
+                </div>
+            </div>
             {openModalTambah && (
                 <ModalTambah 
                 onClose={() => {
@@ -150,11 +210,8 @@ export default function DataUser(){
                         </AlertDescription>
                     </Alert>
                 </div>
-
                 )
             }
-        
-
         </div>
     )
 }

@@ -16,6 +16,7 @@ import {
   SelectValue, } from "./select";
 import { Button } from "./button";
 import { Input } from "./input";
+import { Loader2 } from "lucide-react";
 
 export default function ModalTambah({ onClose,onSuccess,selectedUser}) {
 
@@ -59,10 +60,10 @@ export default function ModalTambah({ onClose,onSuccess,selectedUser}) {
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-      <Card className="w-full max-w-sm bg-white p-4 mt-6">
+      <Card className="w-full max-w-md bg-white p-4 mt-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-bold">{selectedUser?"Edit User" : "Tambah User"}</h2>
-          <Button onClick={onClose}>
+          <Button className="font-black text-lg" onClick={onClose}>
             ✕
           </Button>
         </div>
@@ -109,7 +110,7 @@ export default function ModalTambah({ onClose,onSuccess,selectedUser}) {
               onClick={handleSubmit}
               disabled={isCreating || isEditing}
             >
-               {isCreating || isEditing ? "Menyimpan..." : "Simpan"}
+               {isCreating || isEditing ? <Loader2 className="animate-spin "/> : "Simpan"}
             </Button>
           </div>
         </CardContent>

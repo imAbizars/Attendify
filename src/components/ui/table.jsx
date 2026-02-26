@@ -23,7 +23,7 @@ function TableHeader({
   return (
     <thead
       data-slot="table-header"
-      className={cn("[&_tr]:border-b-2 [&_tr]:border-border", className)}
+      className={cn("[&_tr]:border-b-2 [&_tr]:border-border ", className)}
       {...props} />
   );
 }

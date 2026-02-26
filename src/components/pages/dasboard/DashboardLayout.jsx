@@ -12,13 +12,13 @@ export default function DashboardLayout() {
   };
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex h-screen overflow-hidden">
       <Aside />
-      <div className="flex flex-col flex-1">
+      <div className="flex flex-col flex-1 overflow-hidden">
         <header className="h-20 border-b-4 flex items-center px-8 bg-main">
           <h1 className="text-xl font-bold">{getTitle()}</h1>
         </header>
-        <main className="flex-1 p-6">
+        <main className="flex-1 p-6 overflow-y-auto pb-8">
           <div className="p-4">
             <Outlet />
           </div>
