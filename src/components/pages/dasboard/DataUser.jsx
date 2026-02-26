@@ -49,6 +49,28 @@ export default function DataUser(){
     const [currentPage,setCurrentPage] = useState(1);
     const itemsPerPages = 5;
     const totalPages = Math.ceil((filteredUsersSearch?.length||0)/itemsPerPages);
+    const getPageNumbers = () => {
+        const pages = [];
+
+        if (totalPages <= 5) {
+            for (let i = 1; i <= totalPages; i++) {
+                pages.push(i);
+            }
+        } else {
+            pages.push(1);
+            if (currentPage > 3) {
+                pages.push("..."); 
+            }
+            for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) {
+                pages.push(i);
+            }
+            if (currentPage < totalPages - 2) {
+                pages.push("..."); 
+            }
+            pages.push(totalPages); 
+        }
+        return pages;
+    };
     //slice data halaman
     const paginatedHalaman = filteredUsersSearch?.slice(
         (currentPage-1) * itemsPerPages,
@@ -126,8 +148,8 @@ export default function DataUser(){
                         <TableHead>Nama</TableHead>
                         <TableHead>Email</TableHead>
                         <TableHead>Password</TableHead>
-                        <TableHead>Phone Number</TableHead>
-                        <TableHead>Address</TableHead>
+                        <TableHead>No telepon</TableHead>
+                        <TableHead>Alamat</TableHead>
                         <TableHead>Role</TableHead>
                         <TableHead className="text-center">Aksi</TableHead>
                     </TableRow>
@@ -159,7 +181,7 @@ export default function DataUser(){
                 
             </Table>
             <div className="flex items-center justify-between mt-4">
-                <span className="text-sm">
+                <span className="text-sm font-bold">
                     Halaman {currentPage} dari {totalPages}
                 </span>
                 <div className="flex items-center gap-2">
@@ -171,14 +193,18 @@ export default function DataUser(){
                         Sebelumnya
                     </Button>
 
-                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                        <Button
-                            key={page}
-                            onClick={() => setCurrentPage(page)}
-                            className={currentPage === page ? "bg-main-foreground" : "bg-white text-black"}
-                        >
-                            {page}
-                        </Button>
+                    {getPageNumbers().map((page, index) => (
+                        page === "..." ? (
+                            <span key={index} className="px-2">...</span>
+                        ) : (
+                            <Button
+                                key={index}
+                                onClick={() => setCurrentPage(page)}
+                                className={currentPage === page ? "bg-main-foreground" : "bg-main text-black"}
+                            >
+                                {page}
+                            </Button>
+                        )
                     ))}
 
                     <Button

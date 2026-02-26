@@ -10,6 +10,7 @@ import MainLayout from "./components/pages/main/MainLayout";
 import DataUser from "./components/pages/dasboard/DataUser";
 import Riwayat from "./components/pages/dasboard/Riwayat";
 import DashboardLayout from "./components/pages/dasboard/DashboardLayout";
+import Login from "./components/pages/main/Login";
 const queryClient = new QueryClient();
 
 export default function App(){
@@ -17,6 +18,7 @@ export default function App(){
     <QueryClientProvider client={queryClient}>       
       <Router>
         <Routes>
+          <Route path="/login"element={<Login/>} />
           <Route element={<MainLayout/>}>
             <Route path="/home" element={<Home/>}/>
             <Route path="/riwayatabsen" element={<RiwayatAbsen/>}/>

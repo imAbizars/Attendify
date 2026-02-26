@@ -28,10 +28,21 @@ export default function ModalTambah({ onClose,onSuccess,selectedUser}) {
     address: selectedUser?.address||"",
     role: selectedUser?.role||"",
   });
+  const resetForm = ()=>{
+     setForm({
+          name :"",
+          email:"",
+          password:"",
+          phonenumber:"",
+          address:"",
+          role:""
+     })
+  }
   //createuser
   const { mutate:createMutate, isPending:isCreating } = createUser({
     onSuccess: () => {
       onSuccess();
+      resetForm();
     },
   });
   //edituser
