@@ -10,6 +10,7 @@ import MainLayout from "./components/pages/main/MainLayout";
 import DataUser from "./components/pages/dasboard/DataUser";
 import Riwayat from "./components/pages/dasboard/Riwayat";
 import DashboardLayout from "./components/pages/dasboard/DashboardLayout";
+import ProtectedRoute from "./lib/protected/ProtectedRoute"
 import Login from "./components/pages/main/Login";
 const queryClient = new QueryClient();
 
@@ -19,17 +20,25 @@ export default function App(){
       <Router>
         <Routes>
           <Route path="/login"element={<Login/>} />
-          <Route element={<MainLayout/>}>
+          <Route element={
+                        <ProtectedRoute>
+                            <MainLayout />
+                        </ProtectedRoute>
+                    }>
             <Route path="/home" element={<Home/>}/>
             <Route path="/riwayatabsen" element={<RiwayatAbsen/>}/>
             <Route path="/profile" element={<Profile/>}/>
             <Route path="/izin" element={<Izin/>}/>
           </Route>
-            <Route path="/dashboard" element={<DashboardLayout />}>
-              <Route index element={<Dashboard/>} /> 
-              <Route path="pegawai" element={<DataUser />} />
-              <Route path="riwayat" element={<Riwayat />} />
-            </Route>
+            <Route path="/dashboard" element={
+                        <ProtectedRoute allowedRole="admin">
+                            <DashboardLayout />
+                        </ProtectedRoute>
+                    }>
+                  <Route index element={<Dashboard />} />
+                  <Route path="pegawai" element={<DataUser />} />
+                  <Route path="riwayat" element={<Riwayat />} />
+              </Route>
 
         </Routes>
       </Router>

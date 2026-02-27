@@ -1,4 +1,7 @@
 import React from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { authLogin } from "@/hooks/auth/auth";
 import {
   Card,
   CardContent,
@@ -10,25 +13,48 @@ import {
 import { Button } from "@/components/ui/button";
 import { Label } from "@radix-ui/react-label";
 import { Input } from "@/components/ui/input";
+
 export default function Login(){
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
+    const navigate = useNavigate();
+
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        try {
+            const payload = await authLogin(email, password);
+
+            if (payload.role === "admin") {
+                navigate("/dashboard");
+            } else {
+                navigate("/home");
+            }
+        } catch (err) {
+            setError(err.response?.data?.message || "Login gagal");
+        }
+    };
     return(
         <div className="flex min-h-screen justify-center items-center">
             <Card className="w-full max-w-sm m-4">
                 <CardHeader>
-                    <CardTitle className="text-xl">Attendify </CardTitle>
-                    <CardDescription>
+                    <CardTitle className="text-2xl font-bold">Attendify </CardTitle>
+                    <CardDescription className="text-md">
                     Silahkan Login Terlebih Dahulu
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <form>
+                    <form onSubmit={handleLogin}>
                     <div className="flex flex-col gap-6">
+                        {error && <p className="text-red-500 text-sm">{error}</p>}
                         <div className="grid gap-2">
                         <Label htmlFor="email">Email</Label>
                         <Input
                             id="email"
                             type="email"
                             placeholder="m@example.com"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                             required
                         />
                         </div>
@@ -42,7 +68,12 @@ export default function Login(){
                             Forgot your password?
                             </a>
                         </div>
-                        <Input id="password" type="password" required />
+                        <Input 
+                        id="password" 
+                        type="password" 
+                        required 
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)} />
                         </div>
                     </div>
                     </form>
@@ -51,15 +82,6 @@ export default function Login(){
                     <Button type="submit" className="w-full">
                     Login
                     </Button>
-                    <Button variant="neutral" className="w-full">
-                    Login with Google
-                    </Button>
-                    <div className="mt-4 text-center text-sm">
-                    Don&apos;t have an account?{" "}
-                    <a href="#" className="underline underline-offset-4">
-                        Sign up
-                    </a>
-                    </div>
                 </CardFooter>
             </Card>
         </div>
