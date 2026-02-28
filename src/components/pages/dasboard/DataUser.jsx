@@ -91,6 +91,9 @@ export default function DataUser(){
     const handleSuccessEdit = ()=>{
         showAlert('Data Berhasil diupdate');
     }
+    const hiddenPassword = ()=>{
+        
+    }
     //render data
     const renderUserData = () => {
         return paginatedHalaman?.map((user) => (

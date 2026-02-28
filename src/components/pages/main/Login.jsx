@@ -13,15 +13,18 @@ import {
 import { Button } from "@/components/ui/button";
 import { Label } from "@radix-ui/react-label";
 import { Input } from "@/components/ui/input";
+import { Loader2 } from "lucide-react";
 
 export default function Login(){
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
+    const [loading,setLoading] = useState(false);
     const navigate = useNavigate();
 
     const handleLogin = async (e) => {
         e.preventDefault();
+        setLoading(true);
         try {
             const payload = await authLogin(email, password);
 
@@ -32,6 +35,8 @@ export default function Login(){
             }
         } catch (err) {
             setError(err.response?.data?.message || "Login gagal");
+        }finally{
+            setLoading(false);
         }
     };
     return(
@@ -44,7 +49,7 @@ export default function Login(){
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <form onSubmit={handleLogin}>
+                    <form >
                     <div className="flex flex-col gap-6">
                         {error && <p className="text-red-500 text-sm">{error}</p>}
                         <div className="grid gap-2">
@@ -52,7 +57,6 @@ export default function Login(){
                         <Input
                             id="email"
                             type="email"
-                            placeholder="m@example.com"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             required
@@ -79,8 +83,12 @@ export default function Login(){
                     </form>
                 </CardContent>
                 <CardFooter className="flex-col gap-2">
-                    <Button type="submit" className="w-full">
-                    Login
+                    <Button 
+                    onClick={handleLogin} 
+                    className="w-full"
+                    disabled={loading}
+                    >
+                    {loading?<Loader2 className="animate-spin"/>: "Login"}
                     </Button>
                 </CardFooter>
             </Card>

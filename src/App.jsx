@@ -10,8 +10,8 @@ import MainLayout from "./components/pages/main/MainLayout";
 import DataUser from "./components/pages/dasboard/DataUser";
 import Riwayat from "./components/pages/dasboard/Riwayat";
 import DashboardLayout from "./components/pages/dasboard/DashboardLayout";
-import ProtectedRoute from "./lib/protected/ProtectedRoute"
 import Login from "./components/pages/main/Login";
+import ProtectedRoute from "./lib/protected/ProtectedRoute"
 const queryClient = new QueryClient();
 
 export default function App(){
@@ -19,7 +19,7 @@ export default function App(){
     <QueryClientProvider client={queryClient}>       
       <Router>
         <Routes>
-          <Route path="/login"element={<Login/>} />
+            <Route path="/login"element={<Login/>} />z
           <Route element={
                         <ProtectedRoute>
                             <MainLayout />
@@ -35,14 +35,14 @@ export default function App(){
                             <DashboardLayout />
                         </ProtectedRoute>
                     }>
-                  <Route index element={<Dashboard />} />
-                  <Route path="pegawai" element={<DataUser />} />
-                  <Route path="riwayat" element={<Riwayat />} />
-              </Route>
+              <Route index element={<Dashboard/>} /> 
+              <Route path="pegawai" element={<DataUser />} />
+              <Route path="riwayat" element={<Riwayat />} />  
+            </Route>
 
         </Routes>
       </Router>
-    </QueryClientProvider>
+    </QueryClientProvider>    
     
 
   )
