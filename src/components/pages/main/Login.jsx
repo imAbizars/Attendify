@@ -23,22 +23,37 @@ export default function Login(){
     const navigate = useNavigate();
 
     const handleLogin = async (e) => {
-        e.preventDefault();
-        setLoading(true);
-        try {
-            const payload = await authLogin(email, password);
+    e.preventDefault();
+    setError(""); 
 
-            if (payload.role === "admin") {
-                navigate("/dashboard");
-            } else {
-                navigate("/home");
-            }
-        } catch (err) {
-            setError(err.response?.data?.message || "Login gagal");
-        }finally{
-            setLoading(false);
+    if (!email && !password) return setError("Email dan password tidak boleh kosong");
+    if (!email) return setError("Email tidak boleh kosong");
+    if (!password) return setError("Password tidak boleh kosong");
+    if (!/\S+@\S+\.\S+/.test(email)) return setError("Format email tidak valid");
+    if (password.length < 6) return setError("Password minimal 6 karakter");
+
+    setLoading(true); 
+    try {
+        const payload = await authLogin(email, password);
+
+        if (payload.role === "admin") {
+            navigate("/dashboard");
+        } else {
+            navigate("/home");
         }
-    };
+    } catch (err) {
+        const message = err.response?.data?.message;
+        if (message === "Email tidak terdaftar") {
+            setError("Email tidak terdaftar");
+        } else if (message === "Password salah") {
+            setError("Password salah");
+        } else {
+            setError("Terjadi kesalahan, coba lagi");
+        }
+    } finally {
+        setLoading(false);
+    }
+};
     return(
         <div className="flex min-h-screen justify-center items-center">
             <Card className="w-full max-w-sm m-4">
