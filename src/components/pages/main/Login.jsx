@@ -32,7 +32,7 @@ export default function Login(){
     if (!/\S+@\S+\.\S+/.test(email)) return setError("Format email tidak valid");
     if (password.length < 6) return setError("Password minimal 6 karakter");
 
-    setLoading(true); 
+    setLoading(true); // loading baru mulai setelah validasi lolos
     try {
         const payload = await authLogin(email, password);
 

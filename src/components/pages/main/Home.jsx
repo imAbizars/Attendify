@@ -19,6 +19,11 @@ export default function Home() {
   const [location, setLocation] = useState(null);
   const [error, setError] = useState("");
   const [addres,setAddres]  = useState("");
+
+  // ambil nama usen
+  const user = JSON.parse(localStorage.getItem("user"));
+  const nama = user?.nama || "user"
+  //ini function ambil alamat
   async function getAddres(lat,lng){
     try{
       const response = await fetch(
@@ -36,7 +41,7 @@ export default function Home() {
     setError("Browser tidak mendukung GPS");
     return;
   }
-
+  //watch position by geolocation
   const watchId = navigator.geolocation.watchPosition(
     (position) => {
       const loc = {
@@ -73,7 +78,7 @@ useEffect(() => {
 
   return (
     <section className="p-4 pt-10 border border-black min-h-screen w-full">
-      <h1 className="text-3xl mb-4">Selamat Malam </h1>
+      <h1 className="text-3xl mb-4">Selamat Malam {nama}</h1>
 
       {!location && !error && <p>Meminta izin lokasi...</p>}
       {error && 
