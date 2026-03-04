@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import {useAbsen} from "@/hooks/absen/useAbsen";
+import {absenMasuk} from "@/hooks/absen/absen";
 import { MapContainer, TileLayer, Marker, Circle } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
@@ -7,7 +9,7 @@ import iconShadow from "leaflet/dist/images/marker-shadow.png";
 import umamusume from "@/assets/images/umamusume.gif";
 import { Button } from "../../ui/button";
 import { Alert,AlertDescription,AlertTitle} from "@/components/ui/alert";
-import { AlertCircleIcon } from "lucide-react";
+import { AlertCircleIcon,Loader2} from "lucide-react";
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -23,6 +25,8 @@ export default function Home() {
   // ambil nama usen
   const user = JSON.parse(localStorage.getItem("user"));
   const nama = user?.nama || "user"
+  //absen
+  const { statusAbsen, loading, message, handleAbsenMasuk, handleAbsenKeluar } = useAbsen();
   //ini function ambil alamat
   async function getAddres(lat,lng){
     try{
@@ -117,17 +121,29 @@ useEffect(() => {
         </>
         
       )}
-
+      {message && (
+        <p className={`text-center mt-2 text-sm ${message.includes("berhasil") ? "text-green-500" : "text-red-500"}`}>
+          {message}
+        </p>
+      )}
       <div className="mt-10 p-2 mt-4 text-center space-y-4 ">
         <h4>Absen berikutnya dimulai pukul 08:00</h4>
-        <Button 
-        className="w-full text-white"
-        size="lg"
-        >ABSEN MASUK</Button>
-        <Button 
-        className="w-full text-white"
-        size="lg"
-        >ABSEN KELUAR</Button>
+        <Button
+          className="w-full text-white"
+          size="lg"
+          disabled={statusAbsen.sudahMasuk || loading || !location}
+          onClick={() => handleAbsenMasuk(location.lat, location.lng)}
+        >
+          {loading ? <Loader2 className="animate-spin" /> : statusAbsen.sudahMasuk ? "Sudah Absen Masuk ✓" : "ABSEN MASUK"}
+        </Button>
+        <Button
+          className="w-full text-white"
+          size="lg"
+          disabled={!statusAbsen.sudahMasuk || statusAbsen.sudahKeluar || loading}
+          onClick={handleAbsenKeluar}
+        >
+          {loading ? <Loader2 className="animate-spin" /> : statusAbsen.sudahKeluar ? "Sudah Absen Keluar ✓" : "ABSEN KELUAR"}
+        </Button>
       </div>
     </section>
   );
