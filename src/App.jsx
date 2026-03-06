@@ -19,7 +19,7 @@ export default function App(){
     <QueryClientProvider client={queryClient}>       
       <Router>
         <Routes>
-            <Route path="/login"element={<Login/>} />z
+            <Route path="/"element={<Login/>} />
           <Route element={
                         <ProtectedRoute>
                             <MainLayout />

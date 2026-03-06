@@ -9,7 +9,7 @@ import iconShadow from "leaflet/dist/images/marker-shadow.png";
 import umamusume from "@/assets/images/umamusume.gif";
 import { Button } from "../../ui/button";
 import { Alert,AlertDescription,AlertTitle} from "@/components/ui/alert";
-import { AlertCircleIcon,Loader2} from "lucide-react";
+import { AlertCircleIcon,Loader2,CircleCheckIcon} from "lucide-react";
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -26,7 +26,7 @@ export default function Home() {
   const user = JSON.parse(localStorage.getItem("user"));
   const nama = user?.nama || "user"
   //absen
-  const { statusAbsen, loading, message, handleAbsenMasuk, handleAbsenKeluar } = useAbsen();
+  const { statusAbsen, loading, message, handleAbsenMasuk, handleAbsenKeluar,clearMessage } = useAbsen();
   //ini function ambil alamat
   async function getAddres(lat,lng){
     try{
@@ -66,7 +66,6 @@ export default function Home() {
       maximumAge: 0,
     }
   );
-
   return () => navigator.geolocation.clearWatch(watchId);
 }, []);
 
@@ -78,6 +77,14 @@ useEffect(() => {
   }
 }, [location]);
 
+useEffect(() => {
+if (message) {
+  const timer = setTimeout(() => {
+    clearMessage(); 
+  }, 2000);
+  return () => clearTimeout(timer);
+}
+}, [message]);
 
 
   return (
@@ -122,9 +129,14 @@ useEffect(() => {
         
       )}
       {message && (
-        <p className={`text-center mt-2 text-sm ${message.includes("berhasil") ? "text-green-500" : "text-red-500"}`}>
-          {message}
-        </p>
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+          <Alert className="w-60 h-80 flex items-center justify-center bg-white">
+            <AlertDescription className="flex flex-col items-center justify-center gap-2 text-lg">
+              {message}
+              <CircleCheckIcon size={40} className="text-[#82ff05]"/> 
+            </AlertDescription>
+          </Alert>
+        </div>
       )}
       <div className="mt-10 p-2 mt-4 text-center space-y-4 ">
         <h4>Absen berikutnya dimulai pukul 08:00</h4>

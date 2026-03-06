@@ -1,6 +1,6 @@
 import { axiosInstance } from "@/lib/axios/axios";
 import { useState, useEffect } from "react";
-import { absenMasuk } from "./absen";
+import { absenMasuk,absenKeluar } from "./absen";
 
 export const useAbsen = () => {
     const [statusAbsen, setStatusAbsen] = useState({
@@ -9,6 +9,7 @@ export const useAbsen = () => {
     });
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState("");
+    const clearMessage = () => setMessage("");
 
     // Cek status absen hari ini saat komponen mount
     useEffect(() => {
@@ -61,5 +62,5 @@ export const useAbsen = () => {
         }
     };
 
-    return { statusAbsen, loading, message, handleAbsenMasuk, handleAbsenKeluar };
+    return { statusAbsen, loading, message, handleAbsenMasuk, handleAbsenKeluar ,clearMessage};
 };
