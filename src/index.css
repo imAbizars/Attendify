@@ -74,6 +74,7 @@
     100% { transform: translateY(-20px); opacity: 0; }
 }
 
+
 @layer base {
   body {
     @apply text-foreground font-base bg-background;

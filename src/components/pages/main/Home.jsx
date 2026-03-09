@@ -9,6 +9,8 @@ import iconShadow from "leaflet/dist/images/marker-shadow.png";
 import umamusume from "@/assets/images/umamusume.gif";
 import { Button } from "../../ui/button";
 import { Alert,AlertDescription,AlertTitle} from "@/components/ui/alert";
+import Lottie from "lottie-react";
+import SuccesAnimation from "@/assets/animation/Successfull Animation.json";
 import { AlertCircleIcon,Loader2,CircleCheckIcon} from "lucide-react";
 
 delete L.Icon.Default.prototype._getIconUrl;
@@ -90,7 +92,7 @@ if (message) {
   return (
     <section className="p-4 pt-10 border border-black min-h-screen w-full">
       <h1 className="text-3xl mb-4">Selamat Malam {nama}</h1>
-
+      
       {!location && !error && <p>Meminta izin lokasi...</p>}
       {error && 
       <div className="space-y-4 " >
@@ -111,6 +113,7 @@ if (message) {
           center={[location.lat, location.lng]}
           zoom={20}
           style={{ height: "300px", width: "100%",zIndex:"1" }}
+          
         >
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -123,22 +126,25 @@ if (message) {
         </MapContainer>
         <div>
           lokasi kamu berada di koordinat {location.lat}, {location.lng}
-        </div>
-        {addres && <div>Alamat: {addres}</div>}
+        </div> 
         </>
         
       )}
       {message && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
           <Alert className="w-60 h-80 flex items-center justify-center bg-white">
-            <AlertDescription className="flex flex-col items-center justify-center gap-2 text-lg">
+            <AlertDescription className="flex flex-col items-center justify-center text-xl">
               {message}
-              <CircleCheckIcon size={40} className="text-[#82ff05]"/> 
+              <Lottie
+                animationData={SuccesAnimation}
+                loop={false}
+                style={{width:200,height:200}}
+              />
             </AlertDescription>
-          </Alert>
+          </Alert>  
         </div>
       )}
-      <div className="mt-10 p-2 mt-4 text-center space-y-4 ">
+      <div className="mt-2 p-2 mt-4 text-center space-y-4 ">
         <h4>Absen berikutnya dimulai pukul 08:00</h4>
         <Button
           className="w-full text-white"

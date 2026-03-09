@@ -10,7 +10,7 @@ export const useAbsen = () => {
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState("");
     const clearMessage = () => setMessage("");
-
+    
     // Cek status absen hari ini saat komponen mount
     useEffect(() => {
         const cekStatusAbsen = async () => {
