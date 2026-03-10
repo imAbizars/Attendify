@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import {useAbsen} from "@/hooks/absen/useAbsen";
-import {absenMasuk} from "@/hooks/absen/absen";
 import { MapContainer, TileLayer, Marker, Circle } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
@@ -11,7 +10,9 @@ import { Button } from "../../ui/button";
 import { Alert,AlertDescription,AlertTitle} from "@/components/ui/alert";
 import Lottie from "lottie-react";
 import SuccesAnimation from "@/assets/animation/Successfull Animation.json";
-import { AlertCircleIcon,Loader2,CircleCheckIcon} from "lucide-react";
+import FailedAnimation from "@/assets/animation/cross.json";
+import { AlertCircleIcon,Loader2} from "lucide-react";
+import {useGeolocation} from "@/lib/hooks/UseGeolocation";
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -20,73 +21,20 @@ L.Icon.Default.mergeOptions({
 });
 
 export default function Home() {
-  const [location, setLocation] = useState(null);
-  const [error, setError] = useState("");
-  const [addres,setAddres]  = useState("");
-
+  const {location,error} = useGeolocation();
   // ambil nama usen
   const user = JSON.parse(localStorage.getItem("user"));
   const nama = user?.nama || "user"
   //absen
-  const { statusAbsen, loading, message, handleAbsenMasuk, handleAbsenKeluar,clearMessage } = useAbsen();
-  //ini function ambil alamat
-  async function getAddres(lat,lng){
-    try{
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`
-      );
-      const data = await response.json();
-      return data.display_name;
-    }catch (error){
-      console.error("gagal ambil alamat",error);
-      return null;
-    }
-  }
+  const { statusAbsen, loading, message, handleAbsenMasuk, handleAbsenKeluar,clearMessage,isSuccess } = useAbsen();
   useEffect(() => {
-  if (!navigator.geolocation) {
-    setError("Browser tidak mendukung GPS");
-    return;
+  if (message) {
+    const timer = setTimeout(() => {
+      clearMessage(); 
+    }, 2000);
+    return () => clearTimeout(timer);
   }
-  //watch position by geolocation
-  const watchId = navigator.geolocation.watchPosition(
-    (position) => {
-      const loc = {
-        lat: position.coords.latitude,
-        lng: position.coords.longitude,
-      };
-      setLocation(loc);
-      setError("");
-    },
-    (err) => {
-      setLocation(null);
-      setError("GPS kamu sedang mati 😭");
-      console.log(err.code, err.message);
-    },
-    {
-      enableHighAccuracy: true,
-      timeout: 5000,
-      maximumAge: 0,
-    }
-  );
-  return () => navigator.geolocation.clearWatch(watchId);
-}, []);
-
-useEffect(() => {
-  if (location) {
-    getAddres(location.lat, location.lng)
-      .then((addr) => setAddres(addr))
-      .catch(() => setAddres("Alamat tidak tersedia"));
-  }
-}, [location]);
-
-useEffect(() => {
-if (message) {
-  const timer = setTimeout(() => {
-    clearMessage(); 
-  }, 2000);
-  return () => clearTimeout(timer);
-}
-}, [message]);
+  }, [message]);
 
 
   return (
@@ -135,11 +83,20 @@ if (message) {
           <Alert className="w-60 h-80 flex items-center justify-center bg-white">
             <AlertDescription className="flex flex-col items-center justify-center text-xl">
               {message}
-              <Lottie
-                animationData={SuccesAnimation}
+              {isSuccess?(
+                <Lottie
+                  animationData={SuccesAnimation}
+                  loop={false}
+                  style={{width:200,height:200}}
+                />
+              ):(
+                <Lottie
+                animationData={FailedAnimation}
                 loop={false}
                 style={{width:200,height:200}}
-              />
+                />
+              )
+            }
             </AlertDescription>
           </Alert>  
         </div>

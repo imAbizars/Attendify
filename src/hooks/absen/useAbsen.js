@@ -1,6 +1,6 @@
 import { axiosInstance } from "@/lib/axios/axios";
 import { useState, useEffect } from "react";
-import { absenMasuk,absenKeluar } from "./absen";
+import { absenMasuk,absenKeluar,absenHariIni } from "./absen";
 
 export const useAbsen = () => {
     const [statusAbsen, setStatusAbsen] = useState({
@@ -9,19 +9,19 @@ export const useAbsen = () => {
     });
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState("");
+    const [isSuccess, setisSuccess] = useState(false);
     const clearMessage = () => setMessage("");
     
-    // Cek status absen hari ini saat komponen mount
     useEffect(() => {
         const cekStatusAbsen = async () => {
             try {
-                const res = await axiosInstance.get("/absen/hari-ini");
-                const data = res.data.data;
+                const dataAbsen = await absenHariIni();
+                
 
-                if (data) {
+                if (dataAbsen) {
                     setStatusAbsen({
-                        sudahMasuk: !!data.jamMasuk,
-                        sudahKeluar: !!data.jamKeluar,
+                        sudahMasuk: !!dataAbsen.jamMasuk,
+                        sudahKeluar: !!dataAbsen.jamKeluar,
                     });
                 }
             } catch (error) {
@@ -38,10 +38,12 @@ export const useAbsen = () => {
         try {
             const res = await absenMasuk(latitude, longitude);
             setStatusAbsen((prev) => ({ ...prev, sudahMasuk: true }));
+            setisSuccess(true);
             setMessage(res.message);
         } catch (err) {
             console.log("response error:", err.response); 
             console.log("pesan error:", err.response?.data);
+            setisSuccess(false);
             setMessage(err.response?.data?.message || "Absen masuk gagal");
         } finally {
             setLoading(false);
@@ -54,13 +56,15 @@ export const useAbsen = () => {
         try {
             const res = await absenKeluar();
             setStatusAbsen((prev) => ({ ...prev, sudahKeluar: true }));
+            setisSuccess(true);
             setMessage(res.message);
         } catch (err) {
+            setisSuccess(false);
             setMessage(err.response?.data?.message || "Absen keluar gagal");
         } finally {
             setLoading(false);
         }
     };
 
-    return { statusAbsen, loading, message, handleAbsenMasuk, handleAbsenKeluar ,clearMessage};
+    return { statusAbsen, loading, message, handleAbsenMasuk, handleAbsenKeluar ,clearMessage,isSuccess};
 };
