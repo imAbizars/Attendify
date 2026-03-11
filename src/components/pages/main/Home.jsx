@@ -14,6 +14,7 @@ import FailedAnimation from "@/assets/animation/cross.json";
 import { AlertCircleIcon,Loader2} from "lucide-react";
 import {useGeolocation} from "@/lib/hooks/UseGeolocation";
 
+
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconUrl: icon,
@@ -21,7 +22,7 @@ L.Icon.Default.mergeOptions({
 });
 
 export default function Home() {
-  const {location,error} = useGeolocation();
+  const {location,error,jarakKeKantor,dalamJangkauan} = useGeolocation();
   // ambil nama usen
   const user = JSON.parse(localStorage.getItem("user"));
   const nama = user?.nama || "user"
@@ -72,9 +73,19 @@ export default function Home() {
             radius={50}
           />
         </MapContainer>
-        <div>
-          lokasi kamu berada di koordinat {location.lat}, {location.lng}
-        </div> 
+         <div className="mt-2 space-y-1 text-sm">
+            {jarakKeKantor !== null && (
+              dalamJangkauan ? (
+                  <p className="text-green-500 font-medium mt-2">
+                      Lokasi kamu berada {jarakKeKantor} meter dari kantor (dalam jangkauan)
+                  </p>
+              ) : (
+                  <p className="text-red-500 font-medium mt-2">
+                      Lokasi kamu berada {jarakKeKantor} meter dari kantor (di luar jangkauan)
+                  </p>
+              )
+            )}
+        </div>
         </>
         
       )}
