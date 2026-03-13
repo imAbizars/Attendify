@@ -6,7 +6,7 @@ import L from "leaflet";
 import icon from "leaflet/dist/images/marker-icon.png";
 import iconShadow from "leaflet/dist/images/marker-shadow.png";
 import umamusume from "@/assets/images/umamusume.gif";
-import { Button } from "../../ui/button";
+import { Button } from "../../ui/button"; 
 import { Alert,AlertDescription,AlertTitle} from "@/components/ui/alert";
 import Lottie from "lottie-react";
 import SuccesAnimation from "@/assets/animation/Successfull Animation.json";
@@ -27,7 +27,7 @@ export default function Home() {
   const user = JSON.parse(localStorage.getItem("user"));
   const nama = user?.nama || "user"
   //absen
-  const { statusAbsen, loading, message, handleAbsenMasuk, handleAbsenKeluar,clearMessage,isSuccess } = useAbsen();
+  const { statusAbsen, loading, message, handleAbsenMasuk, handleAbsenKeluar, clearMessage, isSuccess, terlambat, clearTerlambat } = useAbsen();
   useEffect(() => {
   if (message) {
     const timer = setTimeout(() => {
@@ -36,7 +36,14 @@ export default function Home() {
     return () => clearTimeout(timer);
   }
   }, [message]);
-
+  useEffect(() => {
+    if (terlambat) {
+        const timer = setTimeout(() => {
+            clearTerlambat();
+        }, 5000); 
+        return () => clearTimeout(timer);
+    }
+}, [terlambat]);
 
   return (
     <section className="p-4 pt-10 border border-black min-h-screen w-full">
@@ -85,7 +92,12 @@ export default function Home() {
                   </p>
               )
             )}
-        </div>
+            {terlambat && (
+                <p className="text-red-500 text-sm font-medium mt-2">
+                    ⚠️ Kamu terlambat {terlambat}
+                </p>
+            )}
+          </div>
         </>
         
       )}
@@ -95,19 +107,19 @@ export default function Home() {
             <AlertDescription className="flex flex-col items-center justify-center text-xl">
               {message}
               {isSuccess?(
-                <Lottie
-                  animationData={SuccesAnimation}
+                  <Lottie
+                    animationData={SuccesAnimation}
+                    loop={false}
+                    style={{width:200,height:200}}
+                  />
+                ):(
+                  <Lottie
+                  animationData={FailedAnimation}
                   loop={false}
                   style={{width:200,height:200}}
-                />
-              ):(
-                <Lottie
-                animationData={FailedAnimation}
-                loop={false}
-                style={{width:200,height:200}}
-                />
-              )
-            }
+                  />
+                )
+              }
             </AlertDescription>
           </Alert>  
         </div>
@@ -120,7 +132,7 @@ export default function Home() {
           disabled={statusAbsen.sudahMasuk || loading || !location}
           onClick={() => handleAbsenMasuk(location.lat, location.lng)}
         >
-          {loading ? <Loader2 className="animate-spin" /> : statusAbsen.sudahMasuk ? "Sudah Absen Masuk ✓" : "ABSEN MASUK"}
+          {loading ? <Loader2 className="animate-spin" /> : statusAbsen.sudahMasuk ? "Sudah Absen Masuk " : "ABSEN MASUK"}
         </Button>
         <Button
           className="w-full text-white"
@@ -128,7 +140,7 @@ export default function Home() {
           disabled={!statusAbsen.sudahMasuk || statusAbsen.sudahKeluar || loading}
           onClick={handleAbsenKeluar}
         >
-          {loading ? <Loader2 className="animate-spin" /> : statusAbsen.sudahKeluar ? "Sudah Absen Keluar ✓" : "ABSEN KELUAR"}
+          {loading ? <Loader2 className="animate-spin" /> : statusAbsen.sudahKeluar ? "Sudah Absen Keluar " : "ABSEN KELUAR"}
         </Button>
       </div>
     </section>
