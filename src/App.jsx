@@ -31,7 +31,7 @@ export default function App(){
             <Route path="/izin" element={<Izin/>}/>
           </Route>
             <Route path="/dashboard" element={
-                        <ProtectedRoute allowedRole="admin">
+                        <ProtectedRoute allowedRole="ADMIN">
                             <DashboardLayout />
                         </ProtectedRoute>
                     }>

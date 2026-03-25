@@ -100,7 +100,6 @@ export default function DataUser(){
             <TableRow key={user.id}>
                 <TableCell>{user.name}</TableCell>
                 <TableCell>{user.email}</TableCell>
-                <TableCell>{user.password}</TableCell>
                 <TableCell>{user.phonenumber}</TableCell>
                 <TableCell>{user.address}</TableCell>
                 <TableCell>{user.role}</TableCell>
@@ -126,7 +125,7 @@ export default function DataUser(){
         ));
     };
     return (
-        <div className=""> 
+        <>
             <div className="flex justify-between mb-6 items-center">
                 <Button 
                 className="bg-main-foreground font-bold"
@@ -150,7 +149,6 @@ export default function DataUser(){
                     <TableRow>
                         <TableHead>Nama</TableHead>
                         <TableHead>Email</TableHead>
-                        <TableHead>Password</TableHead>
                         <TableHead>No telepon</TableHead>
                         <TableHead>Alamat</TableHead>
                         <TableHead>Role</TableHead>
@@ -241,6 +239,6 @@ export default function DataUser(){
                 </div>
                 )
             }
-        </div>
+        </>
     )
 }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import {useAbsen} from "@/hooks/absen/useAbsen";
 import { MapContainer, TileLayer, Marker, Circle } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
@@ -13,7 +13,7 @@ import SuccesAnimation from "@/assets/animation/Successfull Animation.json";
 import FailedAnimation from "@/assets/animation/cross.json";
 import { AlertCircleIcon,Loader2} from "lucide-react";
 import {useGeolocation} from "@/lib/hooks/UseGeolocation";
-
+import { Card } from "@/components/ui/card";
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -27,7 +27,7 @@ export default function Home() {
   const user = JSON.parse(localStorage.getItem("user"));
   const nama = user?.nama || "user"
   //absen
-  const { statusAbsen, loading, message, handleAbsenMasuk, handleAbsenKeluar, clearMessage, isSuccess, terlambat, clearTerlambat } = useAbsen();
+  const { statusAbsen, loading, message, handleAbsenMasuk, handleAbsenKeluar, clearMessage, isSuccess, terlambat, clearTerlambat,info} = useAbsen();
   useEffect(() => {
   if (message) {
     const timer = setTimeout(() => {
@@ -47,7 +47,7 @@ export default function Home() {
 
   return (
     <section className="p-4 pt-10 border border-black min-h-screen w-full">
-      <h1 className="text-3xl mb-4">Selamat Malam {nama}</h1>
+      <h1 className="text-4xl mb-10">Selamat Malam {nama}</h1>
       
       {!location && !error && <p>Meminta izin lokasi...</p>}
       {error && 
@@ -65,22 +65,26 @@ export default function Home() {
 
       {location && (
         <>
-        <MapContainer
-          center={[location.lat, location.lng]}
-          zoom={20}
-          style={{ height: "300px", width: "100%",zIndex:"1" }}
-          
-        >
-          <TileLayer
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          />
-          <Marker position={[location.lat, location.lng]} />
-          <Circle
+        <Card >
+          <div className="flex justify-center">
+          <MapContainer
             center={[location.lat, location.lng]}
-            radius={50}
-          />
-        </MapContainer>
-         <div className="mt-2 space-y-1 text-sm">
+            zoom={20}
+            style={{ height: "300px", width: "90%",zIndex:1 }}
+            
+          >
+            <TileLayer
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            <Marker position={[location.lat, location.lng]} />
+            <Circle
+              center={[location.lat, location.lng]}
+              radius={50}
+            />
+          </MapContainer>
+          </div>  
+        </Card>
+        <div className="mb-2 space-y-1 text-md">
             {jarakKeKantor !== null && (
               dalamJangkauan ? (
                   <p className="text-green-500 font-medium mt-2">
@@ -98,9 +102,12 @@ export default function Home() {
                 </p>
             )}
           </div>
+
+         
         </>
         
       )}
+
       {message && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
           <Alert className="w-60 h-80 flex items-center justify-center bg-white">
@@ -125,7 +132,11 @@ export default function Home() {
         </div>
       )}
       <div className="mt-2 p-2 mt-4 text-center space-y-4 ">
-        <h4>Absen berikutnya dimulai pukul 08:00</h4>
+        {info && (
+          <h4>
+            {info}
+          </h4>
+        )}
         <Button
           className="w-full text-white"
           size="lg"

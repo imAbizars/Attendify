@@ -1,10 +1,18 @@
+import { Card } from "@/components/ui/card"
+
 export default function Dashboard(){
+    const date = new Date().toLocaleDateString("id-ID",{
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+    })
     return(
-         <div className="grid grid-cols-3 gap-4">
-            <div className="border p-4 rounded">
-                Total User: 120
-            </div>
-            
-        </div>
+         <div className="flex">
+            <h1 className="text-2xl">
+                Selamat Datang Kembali,Admin.
+            </h1>
+         </div>
+           
     )
 }

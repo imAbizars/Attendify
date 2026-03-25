@@ -32,11 +32,11 @@ export default function Login(){
     if (!/\S+@\S+\.\S+/.test(email)) return setError("Format email tidak valid");
     if (password.length < 6) return setError("Password minimal 6 karakter");
 
-    setLoading(true); // loading baru mulai setelah validasi lolos
+    setLoading(true); 
     try {
         const payload = await authLogin(email, password);
 
-        if (payload.role === "admin") {
+        if (payload.role === "ADMIN") {
             navigate("/dashboard");
         } else {
             navigate("/home");
@@ -63,7 +63,7 @@ export default function Login(){
                     Silahkan Login Terlebih Dahulu
                     </CardDescription>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="mb-4">
                     <form >
                     <div className="flex flex-col gap-6">
                         {error && <p className="text-red-500 text-sm">{error}</p>}
@@ -80,12 +80,7 @@ export default function Login(){
                         <div className="grid gap-2">
                         <div className="flex items-center">
                             <Label htmlFor="password">Password</Label>
-                            <a
-                            href="#"
-                            className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-                            >
-                            Forgot your password?
-                            </a>
+                            
                         </div>
                         <Input 
                         id="password" 

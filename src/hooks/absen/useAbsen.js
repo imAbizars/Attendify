@@ -9,6 +9,7 @@ export const useAbsen = () => {
     });
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState("");
+    const [info,setInfo] = useState(null);
     const [isSuccess, setisSuccess] = useState(false);
     const [terlambat,setTerlambat] = useState(null);
     const clearMessage = () => setMessage("");
@@ -39,6 +40,7 @@ export const useAbsen = () => {
     const handleAbsenMasuk = async (latitude, longitude) => {
         setLoading(true);
         setMessage("");
+        setInfo(null);
         try {
             const res = await absenMasuk(latitude, longitude);
             setStatusAbsen((prev) => ({ ...prev, sudahMasuk: true }));
@@ -75,6 +77,7 @@ export const useAbsen = () => {
             setStatusAbsen((prev) => ({ ...prev, sudahKeluar: true }));
             setisSuccess(true);
             setMessage(res.message);
+            setInfo("Absen Berikutnya Pada Pukul 08:00")
         } catch (err) {
             setisSuccess(false);
             setMessage(err.response?.data?.message || "Absen keluar gagal");
@@ -83,5 +86,5 @@ export const useAbsen = () => {
         }
     };
     
-    return { statusAbsen, loading, message, handleAbsenMasuk, handleAbsenKeluar ,clearMessage,isSuccess,terlambat,clearTerlambat};
+    return { statusAbsen, loading, message, handleAbsenMasuk, handleAbsenKeluar ,clearMessage,isSuccess,terlambat,clearTerlambat,info };
 };
