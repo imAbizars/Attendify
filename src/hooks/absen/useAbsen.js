@@ -7,7 +7,7 @@ export const useAbsen = () => {
         sudahMasuk: false,
         sudahKeluar: false,
     });
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(false);              
     const [message, setMessage] = useState("");
     const [info,setInfo] = useState(null);
     const [isSuccess, setisSuccess] = useState(false);
