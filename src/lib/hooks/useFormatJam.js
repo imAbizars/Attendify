@@ -9,3 +9,11 @@ export const formatTerlambat = (totalMenit) => {
     }
     return `${jam} jam ${menit} menit`;
 };
+
+export const formatJam = (date) => {
+    return new Date(date).toLocaleTimeString("id-ID", {
+        hour: "2-digit",
+        minute: "2-digit",
+        timeZone: "Asia/Jakarta"
+    });
+};

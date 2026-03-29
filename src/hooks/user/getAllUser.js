@@ -12,3 +12,12 @@ export const getAllUser = ({ onError }) => {
     });
 };
 
+export const getJumlahUser = () => {
+    return useQuery({
+        queryKey: ["fetch.jumlahUser"], 
+        queryFn: async () => {
+            const res = await axiosInstance.get("/user/jumlah");
+            return res.data.data;
+        },
+    });
+};

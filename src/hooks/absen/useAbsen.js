@@ -22,7 +22,6 @@ export const useAbsen = () => {
             try {
                 const dataAbsen = await absenHariIni();
                 
-
                 if (dataAbsen) {
                     setStatusAbsen({
                         sudahMasuk: !!dataAbsen.jamMasuk,
