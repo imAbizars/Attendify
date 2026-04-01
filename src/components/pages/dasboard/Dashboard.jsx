@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {getAllAbsenToday} from "@/hooks/absen/getAllAbsenToday";
 import {useStatistikAbsen} from "@/hooks/absen/getStatistikAbsen";
 import {getJumlahUser} from "@/hooks/user";
@@ -22,20 +23,31 @@ import{
   ChartTooltipContent,
 } from "@/components/ui/chart"
 import { Button } from "@/components/ui/button";
-import { Loader2, RefreshCw } from "lucide-react";
-import { Bar,BarChart,CartesianGrid, XAxis } from "recharts"
+import { Loader2, RefreshCw,CalendarIcon, ArrowBigDown, CalendarArrowDownIcon, ChevronDownIcon} from "lucide-react";
+import { Bar,BarChart,CartesianGrid, XAxis, YAxis } from "recharts"
 import { formatJam } from "@/lib/hooks/useFormatJam";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 export const description = "A stacked area chart"
 
 export default function Dashboard(){
     
     const {dataAbsen,loading}= getAllAbsenToday();
+    const [waktu,setWaktu] = useState(new Date());
+    useEffect(()=>{
+        const interval = setInterval(()=>{
+            setWaktu(new Date())
+        },1000);
+        return ()=>clearInterval(interval);
+    },[]);
+    const { chartData,refetch,isFetching,selectedMonth,setSelectedMonth} = useStatistikAbsen();
     
-    const { chartData,refetch,isFetching } = useStatistikAbsen();
 
     const {data : jumlahUser} = getJumlahUser();
-    
+    useEffect(() => {
+    refetch();
+    }, [selectedMonth]);
+
     const chartConfig = {
     hadir: { 
         label: "Hadir", 
@@ -47,17 +59,34 @@ export default function Dashboard(){
     },
     
     } 
+    
     return(
-         <div className="relative">
-            <h1 className="text-2xl w-full h-20">
-                Selamat Datang Kembali,Admin.
-            </h1>
+         <div className="relative  h-full">
+            <div className="flex pb-10 justify-between">
+                <h1 className="text-3xl ">
+                    Selamat Datang Kembali,Admin.
+                </h1>
+                <h1 className="p-1 text-2xl border-2 border-black rounded-md">
+                    {waktu.toLocaleDateString("id-ID", { 
+                        timeZone: "Asia/Jakarta",
+                        weekday: "long",
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                    })} {waktu.toLocaleTimeString("id-ID", { 
+                        timeZone: "Asia/Jakarta",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        hour12: false 
+                    })}
+                </h1>
+            </div>
             <div className="flex gap-6 ">
                 <div className="w-1/2 min-w-0">
-                    <div className="h-full rounded-md border-2 bg-main ">
+                    <div className="h-full rounded-md border-2 bg-white">
                         <div className=" h-full overflow-y-auto shadow-shadow rounded-base ">
                             <Table className="table-fixed w-full !border-none">
-                                <TableHeader className="sticky top-0 bg-white z-10 ">
+                                <TableHeader className="sticky top-0 z-10">
                                     <TableRow className="border-b">
                                         <TableHead className="w-1/4">Nama</TableHead>
                                         <TableHead className="w-1/4">Jam Masuk</TableHead>
@@ -106,13 +135,42 @@ export default function Dashboard(){
                 </div>
 
                 <div className="w-1/2 min-w-0 h-full">
-                    <Card className="w-full bg-secondary-background text-foreground">
+                    <Card className="w-full text-foreground bg-white">
                         <CardHeader>
                             <div className="flex items-center justify-between">
                                 <div>
                                     <CardTitle>Statistik Absen</CardTitle>
-                                    <CardDescription>Menampilkan Total Absen 4 bulan terakhir</CardDescription>
+                                    <CardDescription>Menampilkan Total Absen Bulan Ini</CardDescription>
                                 </div>
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                    <Button
+                                        variant="noShadow"
+                                        className="w-40 justify-start text-left font-base text-black"
+                                    >
+                                        <CalendarIcon className="text-black"/>
+                                        {new Date(selectedMonth.year, selectedMonth.month - 1).toLocaleString("id-ID", { month: "long" })} {selectedMonth.year}
+                                        <ChevronDownIcon/>
+                                    </Button>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-50 p-2">
+                                        <div className="grid grid-cols-4 gap-2">
+                                            {Array.from({ length: 12 }, (_, i) => (
+                                                <Button
+                                                    key={i}
+                                                    onClick={() => {
+                                                        setSelectedMonth({ month: i + 1, year: selectedMonth.year });
+                                                    }}
+                                                    className={`text-xs p-2 rounded w-full ${
+                                                        selectedMonth.month === i + 1 ? "bg-main text-white" : ""
+                                                    }`}
+                                                >
+                                                    {new Date(2026, i).toLocaleString("id-ID", { month: "short" })}
+                                                </Button>
+                                            ))}
+                                        </div>
+                                    </PopoverContent>
+                                </Popover>
                                 <Button
                                     size="sm"
                                     onClick={() => refetch()}
@@ -130,16 +188,20 @@ export default function Dashboard(){
                                 <BarChart 
                                 data={chartData} 
                                 margin={{ left: 12, right: 12 }}
-                                barCategoryGap="40%"  
+                                barSize={20}
                                 barGap={2} 
                                 >
                                     <CartesianGrid vertical={false} />
                                     <XAxis
-                                        dataKey="month"
+                                        dataKey="day"
                                         tickLine={false}
                                         axisLine={false}
                                         tickMargin={8}
-                                        tickFormatter={(value) => value.slice(0, 3)}
+                                        tickFormatter={(value) => value.slice(0, 8)}
+                                    />
+                                    <YAxis
+                                        hide={true}
+                                        domain={[0,(dataMax)=>dataMax + 1]}
                                     />
                                     <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="dot" />} />
                                     <Bar dataKey="hadir" fill="var(--color-hadir)" radius={4} />

@@ -63,7 +63,7 @@ function TableRow({
     <tr
       data-slot="table-row"
       className={cn(
-        "border-b-2 border-border transition-colors text-black bg-main font-base data-[state=selected]:bg-secondary-background data-[state=selected]:text-main-foreground",
+        "border-b-2 border-border transition-colors text-black bg-white font-base data-[state=selected]:bg-secondary-background data-[state=selected]:text-main-foreground",
         className
       )}
       {...props} />
