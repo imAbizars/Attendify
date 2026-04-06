@@ -25,23 +25,16 @@ import{
 import { Button } from "@/components/ui/button";
 import { Loader2, RefreshCw,CalendarIcon, ArrowBigDown, CalendarArrowDownIcon, ChevronDownIcon} from "lucide-react";
 import { Bar,BarChart,CartesianGrid, XAxis, YAxis } from "recharts"
-import { formatJam } from "@/lib/hooks/useFormatJam";
+import { formatJam } from "@/lib/utilites/useFormatJam";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-
+import {useWaktu} from "@/lib/utilites/useWaktu";
 export const description = "A stacked area chart"
 
 export default function Dashboard(){
     
     const {dataAbsen,loading}= getAllAbsenToday();
-    const [waktu,setWaktu] = useState(new Date());
-    useEffect(()=>{
-        const interval = setInterval(()=>{
-            setWaktu(new Date())
-        },1000);
-        return ()=>clearInterval(interval);
-    },[]);
     const { chartData,refetch,isFetching,selectedMonth,setSelectedMonth} = useStatistikAbsen();
-    
+    const { waktu } = useWaktu();
 
     const {data : jumlahUser} = getJumlahUser();
     useEffect(() => {
@@ -66,7 +59,7 @@ export default function Dashboard(){
                 <h1 className="text-3xl ">
                     Selamat Datang Kembali,Admin.
                 </h1>
-                <h1 className="p-1 text-2xl border-2 border-black rounded-md">
+                <h1 className="p-1 text-2xl rounded-md">
                     {waktu.toLocaleDateString("id-ID", { 
                         timeZone: "Asia/Jakarta",
                         weekday: "long",

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { absenMasuk,absenKeluar,absenHariIni } from "./absen";
-import {formatTerlambat} from "@/lib/hooks/useFormatJam";
+import {formatTerlambat} from "@/lib/utilites/useFormatJam";
 
 export const useAbsen = () => {
     const [statusAbsen, setStatusAbsen] = useState({
