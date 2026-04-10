@@ -6,7 +6,7 @@ import { useRiwayatAbsen } from "@/hooks/absen/getRiwayatAbsen";
 import { formatJam } from "@/lib/utilites/useFormatJam";
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
-
+import Pagination from "./components/Pagination";
 export default function RiwayatAbsen() {
     const user = JSON.parse(localStorage.getItem("user"));
     const nama = user?.nama || "user";
@@ -33,16 +33,18 @@ export default function RiwayatAbsen() {
             </div>
 
             <div className="flex h-27 gap-2">
-                <Card className="bg-main p-4 w-1/3 text-white font-bold">
-                    <p className="text-sm font-medium">Total Hadir</p>
+                <Card className="bg-main p-4 w-1/3 text-white font-bold ">
+                        <p className="text-xs font-medium">Total Hadir</p>
                     <p className="text-3xl">{totalHadir}</p>
                 </Card>
                 <Card className="bg-main p-4 w-1/3 text-white font-bold">
-                    <p className="text-sm font-medium">Terlambat</p>
+                        <p className="text-xs font-medium">Terlambat</p>
                     <p className="text-3xl">{totalTerlambat}</p>
                 </Card>
                 <Card className="bg-main p-4 w-1/3 text-white font-bold">
-                    <p className="text-sm font-medium">Tidak Hadir</p>
+                    <div>
+                        <p className="text-xs font-medium">Tidak Hadir</p>
+                    </div>
                     <p className="text-3xl">{totalTidakHadir}</p>
                 </Card>
             </div>
@@ -114,32 +116,11 @@ export default function RiwayatAbsen() {
                     </TableBody>
                 </Table>
             </div>
-            <div className="flex gap-2">
-                <Button
-                    size="sm"
-                    onClick={() => setCurrentPage((prev) => prev - 1)}
-                    disabled={currentPage === 1}
-                >
-                    Sebelumnya
-                </Button>
-                {Array.from({ length: totalPage }, (_, i) => (
-                    <Button
-                        key={i}
-                        size="sm"
-                        onClick={() => setCurrentPage(i + 1)}
-                        className={currentPage === i + 1 ? "bg-main text-white" : ""}
-                    >
-                        {i + 1}
-                    </Button>
-                ))}
-                <Button
-                    size="sm"
-                    onClick={() => setCurrentPage((prev) => prev + 1)}
-                    disabled={currentPage === totalPage}
-                >
-                    Selanjutnya
-                </Button>
-            </div>
+            <Pagination
+                currentPage={currentPage}
+                totalPage={totalPage}
+                setCurrentPage={setCurrentPage}
+            />
         </div>
     );
 }
