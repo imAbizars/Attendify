@@ -9,10 +9,11 @@ import {
     DialogTitle,
     DialogFooter,
 } from "@/components/ui/dialog";
+import { Card } from "@/components/ui/card";
 
 export default function Profile() {
     const user = JSON.parse(localStorage.getItem("user"));
-    const nama = user?.name || "user";
+    const nama = user?.nama || "user";
     const [photo, setPhoto] = useState(user?.photo || null);
     const [preview, setPreview] = useState(null);
     const [selectedFile, setSelectedFile] = useState(null);
@@ -54,11 +55,9 @@ export default function Profile() {
 
     return (
         <div className="flex flex-col items-center border border-black min-h-screen pt-10">
-            <div className="flex flex-col items-center gap-8">
-
-                {/* foto profile */}
-                <div className="relative w-35 h-35">
-                    <div className="w-35 h-35 border border-black rounded-full overflow-hidden">
+            <div className="w-full flex flex-col items-center gap-6 pt-10 p-4">
+                <div className="relative w-40 h-40">
+                    <div className="w-40 h-40 rounded-full overflow-hidden border-2 border-black">
                         {photo ? (
                             <img src={photo} alt="profile" className="w-full h-full object-cover"/>
                         ) : (
@@ -67,28 +66,31 @@ export default function Profile() {
                             </div>
                         )}
                     </div>
-
-                    {/* tombol pen */}
-                    <input
-                        ref={inputRef}
-                        type="file"
-                        accept="image/*"
-                        className="hidden"
-                        onChange={handlePilihFile}
-                    />
-                    <button
+                    <input ref={inputRef} type="file" accept="image/*" className="hidden" onChange={handlePilihFile}/>
+                    <Button
                         onClick={handleKlikPen}
-                        className="absolute bottom-0 right-0 bg-main text-white rounded-full p-1 cursor-pointer"
+                        variant="noShadow"
+                        className="absolute bottom-0 right-0 bg-main text-white rounded-full p-3"
                     >
                         <PenIcon className="w-4 h-4"/>
-                    </button>
+                    </Button>
                 </div>
 
-                <div className="text-xl">{nama}</div>
+                <div className="flex flex-col items-center gap-2">
+                    <div className="text-2xl font-bold">{nama}</div>
+                    {/* lebar span mengikuti panjang nama */}
+                    <span
+                        className="h-2 bg-main rounded-lg block border-2"
+                        style={{ width: `${nama.length * 14}px` }} 
+                    />
+                </div>
 
-                {message && (
-                    <p className="text-sm text-green-500">{message}</p>
-                )}
+                <Card className="w-full text-xs p-2">
+                    <h1>Ringkasan Kehadiran Kamu</h1>
+                    <p>Total Keseluruhan Hadir : </p>
+                    <p>Total Keseluruhan Izin : </p>
+                    <p>Total Keseluruhan Terlambat: </p>
+                </Card>
             </div>
 
             {/* Modal Preview */}
