@@ -50,7 +50,7 @@ export default function RiwayatAbsen() {
             </div>
             <Popover>
                 <PopoverTrigger asChild>
-                    <Button className="w-1/2">
+                    <Button className="w-1/2 text-black" variant="noShadow">
                         <CalendarIcon className="mr-2"/>
                         {new Date(selectedMonth.year, selectedMonth.month - 1)
                             .toLocaleString("id-ID", { month: "long" })} {selectedMonth.year}
