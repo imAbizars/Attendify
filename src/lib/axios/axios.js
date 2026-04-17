@@ -1,7 +1,8 @@
 import axios from "axios";
 
 export const axiosInstance = axios.create({
-    baseURL:"https://rest-api-attendify.vercel.app"
+    // baseURL:"https://rest-api-attendify.vercel.app"
+    baseURL:"http://localhost:3000"
 });
 
 axiosInstance.interceptors.request.use((config) => {

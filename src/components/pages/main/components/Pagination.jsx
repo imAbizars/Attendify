@@ -26,11 +26,11 @@ export default function Pagination({ currentPage, totalPage, setCurrentPage }) {
     }
 
     return (
-        <div className="flex flex-col gap-2 ">
+        <div className="flex flex-col items-center gap-2">
             <p className="text-sm text-muted-foreground ">
                 Halaman {currentPage} dari {totalPage}
             </p>
-            <div className="flex items-center gap-1 w-full ">
+            <div className="flex justify-center gap-1 border border-black">
                 <Button
                     size="sm"
                     onClick={() => setCurrentPage((prev) => prev - 1)}

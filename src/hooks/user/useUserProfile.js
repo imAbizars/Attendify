@@ -3,8 +3,22 @@ import { axiosInstance } from "@/lib/axios/axios";
 
 export const useProfile = () => {
     const [loading, setLoading] = useState(false);
+    const [photoProfile,setPhotoProfile] = useState(null);
     const [message, setMessage] = useState("");
-
+    const [totalDataAbsen,setTotalDataAbsen] = useState(0);
+    const [totalDataAbsenIzin,setTotalDataAbsenIzin] = useState(0);
+    const [totalDataAbsenTerlambat,setTotalDataAbsenTerlambat] = useState(0);
+    const getPhotoUser = async () => {
+        setLoading(true);
+        try {
+            const res = await axiosInstance.get("/user/me");
+            setPhotoProfile(res.data.data.photo);
+        } catch(err) {
+            setMessage("gagal mengambil foto");
+        } finally {
+            setLoading(false);
+        }
+    }
     const uploadPhoto = async (file) => {
         setLoading(true);
         try {
@@ -15,9 +29,7 @@ export const useProfile = () => {
                 headers: { "Content-Type": "multipart/form-data" }
             });
 
-            const user = JSON.parse(localStorage.getItem("user"));
-            user.photo = res.data.photo;
-            localStorage.setItem("user", JSON.stringify(user));
+            await getPhotoUser()
 
             setMessage("Foto berhasil diupload");
             return res.data.photo;
@@ -28,5 +40,30 @@ export const useProfile = () => {
         }
     };
 
-    return { uploadPhoto, loading, message };
+    const fetchTotalAbsenUser = async () => {
+        try{
+            const res = await axiosInstance.get("/absen/absen-user");
+            setTotalDataAbsen(res.data.data)
+        }catch(err){
+            setMessage("data gagal dipanggil");
+        }
+    }
+    
+    const fetchTotalAbsenUserIzin = async () => {
+        try{
+            const res = await axiosInstance.get("/absen/absen-user-izin");
+            setTotalDataAbsenIzin(res.data.data);
+        }catch(err){
+            setMessage(err)
+        }
+    }
+    const fetchTotalAbsenUserTerlambat = async () => {
+        try{
+            const res = await axiosInstance.get("/absen/absen-user-terlambat");
+            setTotalDataAbsenTerlambat(res.data.data);
+        }catch(err){
+            setMessage(err)
+        }
+    }
+    return { uploadPhoto, loading, message,getPhotoUser,photoProfile,fetchTotalAbsenUser,totalDataAbsen,totalDataAbsenIzin,setTotalDataAbsenIzin,fetchTotalAbsenUserIzin,totalDataAbsenTerlambat,fetchTotalAbsenUserTerlambat};
 };
