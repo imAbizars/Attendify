@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { axiosInstance } from "@/lib/axios/axios";
 
 export const useProfile = () => {
@@ -8,6 +8,7 @@ export const useProfile = () => {
     const [totalDataAbsen,setTotalDataAbsen] = useState(0);
     const [totalDataAbsenIzin,setTotalDataAbsenIzin] = useState(0);
     const [totalDataAbsenTerlambat,setTotalDataAbsenTerlambat] = useState(0);
+    const [infoRankUser,setInfoRankUser] = useState("");
     const getPhotoUser = async () => {
         setLoading(true);
         try {
@@ -65,5 +66,31 @@ export const useProfile = () => {
             setMessage(err)
         }
     }
-    return { uploadPhoto, loading, message,getPhotoUser,photoProfile,fetchTotalAbsenUser,totalDataAbsen,totalDataAbsenIzin,setTotalDataAbsenIzin,fetchTotalAbsenUserIzin,totalDataAbsenTerlambat,fetchTotalAbsenUserTerlambat};
+    const infoRank = async () => {
+        if (totalDataAbsen <= 240) {
+            setInfoRankUser("Pekerja Keras");
+        } else if (totalDataAbsen <= 360) {
+            setInfoRankUser("Rajin");
+        } else if (totalDataAbsen <= 720) {
+            setInfoRankUser("Teladan");
+        } else {
+            setInfoRankUser("Loyal");
+        }
+    };
+    return { 
+        uploadPhoto, 
+        loading,
+        message,
+        getPhotoUser,
+        photoProfile,
+        fetchTotalAbsenUser,
+        totalDataAbsen,
+        totalDataAbsenIzin,
+        setTotalDataAbsenIzin,
+        fetchTotalAbsenUserIzin,
+        totalDataAbsenTerlambat,
+        fetchTotalAbsenUserTerlambat,
+        infoRank,
+        infoRankUser
+    };
 };
