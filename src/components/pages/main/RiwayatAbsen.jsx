@@ -26,7 +26,7 @@ export default function RiwayatAbsen() {
     const totalTerlambat = riwayat.filter(item => item.status === "TERLAMBAT").length;
     const totalTidakHadir = riwayat.filter(item => item.status === "TIDAK_HADIR").length;
     return (
-        <div className="flex flex-col gap-6 p-4 pt-8 min-h-screen w-full">
+        <div className="flex flex-col gap-6 p-4 pt-8 pb-8 min-h-screen w-full">
             <div>
                 <h1 className="text-3xl">Hi {nama}!</h1>
                 <h2 className="text-2xl">Berikut Riwayat Absen Kamu</h2>

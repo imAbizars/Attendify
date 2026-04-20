@@ -28,7 +28,9 @@ export default function Profile() {
         totalDataAbsenIzin,
         fetchTotalAbsenUserIzin,
         totalDataAbsenTerlambat,
-        fetchTotalAbsenUserTerlambat
+        fetchTotalAbsenUserTerlambat,
+        infoRank,
+        infoRankUser
     } = useProfile();
 
     useEffect(() => {
@@ -36,17 +38,18 @@ export default function Profile() {
         fetchTotalAbsenUser();
         fetchTotalAbsenUserIzin();
         fetchTotalAbsenUserTerlambat();
+        infoRank();
     }, []);
     // saat pilih file, tampilkan preview
     const handlePilihFile = (e) => {
         const file = e.target.files[0];
         if (!file) return;
 
-            setSelectedFile(file);
-            setPreview(URL.createObjectURL(file));
-        };
+        setSelectedFile(file);
+        const objectUrl = URL.createObjectURL(file);
+        setPreview(objectUrl); 
+    };
 
-    // saat klik simpan
     const handleSimpan = async () => {
         if (!selectedFile) return;
 
@@ -59,19 +62,20 @@ export default function Profile() {
         }
     };
     const handleKlikPen = () => {
+        setPreview(photoProfile || null); 
         setOpenModal(true);
     };
-    // saat klik batal
+
     const handleBatal = () => {
         setOpenModal(false);
         setPreview(null);
         setSelectedFile(null);
-        inputRef.current.value = ""; // reset input file
+        inputRef.current.value = ""; 
     };
 
     return (
-        <div className="flex flex-col items-center min-h-screen pt-10">
-            <div className="w-full flex flex-col items-center gap-6 pt-10 p-4">
+        <div className="flex flex-col items-center min-h-screen pt-5">
+            <div className="w-full flex flex-col items-center gap-4 pt-10 p-4">
                 <div className="relative w-40 h-40">
                     <div className="w-40 h-40 rounded-full overflow-hidden border-2 border-black">
                         {photoProfile ? (
@@ -101,11 +105,22 @@ export default function Profile() {
                     />
                 </div>
 
-                <Card className="w-full text-xs p-2">
-                    <h1>Ringkasan Kehadiran Kamu</h1>
-                    <p>Total Keseluruhan Hadir : {totalDataAbsen}</p>
-                    <p>Total Keseluruhan Izin :{totalDataAbsenIzin} </p>
-                    <p>Total Keseluruhan Terlambat: {totalDataAbsenTerlambat}</p>
+                <Card className="w-full p-4">
+                    <h1 className="text-xl">Kamu Adalah {infoRankUser}</h1>
+                    <div className="flex flex-col gap-2 text-xs ">
+                        <h1 className="font-bold">Ringkasan Kehadiran Kamu</h1>
+
+                        {[
+                            { label: "Total Hadir", value: totalDataAbsen },
+                            { label: "Total Izin", value: totalDataAbsenIzin },
+                            { label: "Total Terlambat", value: totalDataAbsenTerlambat },
+                        ].map(({ label, value }) => (
+                            <div key={label} className="flex">
+                                <span className="w-32">{label}</span>
+                                <span>: {value}</span>
+                            </div>
+                        ))}
+                    </div>
                 </Card>
             </div>
 
