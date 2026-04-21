@@ -81,32 +81,33 @@ export default function Home() {
         {location && (
           <>
           <h1 className="text-xl">Lokasi Kamu Berada : </h1>
-          <Card >
-            <div className="flex justify-center">
-            <MapContainer
-              center={[location.lat, location.lng]}
-              zoom={20}
-              style={{ height: "300px", width: "90%",zIndex:1 }}
-              
-            >
-              <TileLayer
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              />
-              <Marker position={[location.lat, location.lng]} />
-              <Circle
+          <div className="">
+            <Card>
+              <div className="flex justify-center">
+              <MapContainer
                 center={[location.lat, location.lng]}
-                radius={50}
-              />
-            </MapContainer>
-            </div>  
-          </Card>
+                zoom={30}
+                style={{ height: "200px", width: "90%",zIndex:1 }}
+              >
+                <TileLayer
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+                <Marker position={[location.lat, location.lng]} />
+                <Circle
+                  center={[location.lat, location.lng]}
+                  radius={50}
+                />
+              </MapContainer>
+              </div>  
+            </Card>
+          </div>
           <div className="mb-2 space-y-1 text-md">
             {jarakKeKantor !== null && (
                 dalamJangkauan ? (
                     <div className="flex justify-center gap-2 p-2 border-2 border-black rounded-md mt-2">
                         <AlertCircleIcon/>
                         <p>
-                            Lokasi kamu berada {jarakKeKantor} meter dari kantor&nbsp;
+                            Lokasi kamu berada {jarakKeKantor} meter dari kantor <br />
                             (<span className="text-green-500 font-medium"> dalam jangkauan </span>)
                         </p>
                     </div>
