@@ -84,3 +84,6 @@
     @apply font-heading;
   }
 }
+.leaflet-control-attribution {
+    display: none !important;
+}
