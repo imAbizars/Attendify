@@ -81,7 +81,6 @@ export default function Home() {
         {location && (
           <>
           <h1 className="text-xl">Lokasi Kamu Berada : </h1>
-          <div className="">
             <Card>
               <div className="flex justify-center">
               <MapContainer
@@ -100,7 +99,6 @@ export default function Home() {
               </MapContainer>
               </div>  
             </Card>
-          </div>
           <div className="mb-2 space-y-1 text-md">
             {jarakKeKantor !== null && (
                 dalamJangkauan ? (
