@@ -98,25 +98,35 @@ export default function Profile() {
 
                 <div className="flex flex-col items-center gap-2">
                     <div className="text-2xl font-bold">{nama}</div>
-                    {/* lebar span mengikuti panjang nama */}
                     <span
                         className="h-2 bg-main rounded-lg block border-2"
                         style={{ width: `${nama.length * 14}px` }} 
                     />
                 </div>
 
-                <Card className="w-full p-4">
-                    <h1 className="text-xl">Kamu Adalah {infoRankUser}</h1>
-                    <div className="flex flex-col gap-2 text-xs ">
-                        <h1 className="font-bold">Ringkasan Kehadiran Kamu</h1>
+                <h1 className="text-xl">Kamu Adalah {infoRankUser}</h1>
+                <Card className="w-full p-8 bg-main">
+                    <div className="flex flex-col gap-2">
+                        <h1 className="text-md ">Ringkasan Kehadiran Kamu</h1>
 
                         {[
                             { label: "Total Hadir", value: totalDataAbsen },
                             { label: "Total Izin", value: totalDataAbsenIzin },
                             { label: "Total Terlambat", value: totalDataAbsenTerlambat },
                         ].map(({ label, value }) => (
-                            <div key={label} className="flex">
-                                <span className="w-32">{label}</span>
+                            <div key={label} className="flex text-xs">
+                                <span className="w-25">{label}</span>
+                                <span>: {value}</span>
+                            </div>
+                        ))}
+                        <h1 className="text-md">Data Pribadi</h1>
+                        {[
+                            {label : "Email", value : "email"},
+                            {label : "Password",value : "password"},
+                            {label : "No Telepon",value : "telepon"} 
+                        ].map(({label,value})=>(
+                            <div key={label} className="flex text-xs">
+                                <span className="w-25">{label}</span>
                                 <span>: {value}</span>
                             </div>
                         ))}

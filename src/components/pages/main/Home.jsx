@@ -16,11 +16,7 @@ import {useGeolocation} from "@/lib/utilites/UseGeolocation";
 import { Card } from "@/components/ui/card";
 import { useWaktu } from "@/lib/utilites/useWaktu";
 
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconUrl: icon,
-  shadowUrl: iconShadow,
-});
+
 
 export default function Home() {
   const {location,error,jarakKeKantor,dalamJangkauan} = useGeolocation();
@@ -53,7 +49,7 @@ export default function Home() {
       return "Malam";
   }
   return (
-    <div className="flex flex-col gap-4 p-4 pt-8  min-h-screen w-full">
+    <div className="flex flex-col gap-4 p-4 pt-10  min-h-screen w-full">
         <div className="flex flex-col gap-2">
           <h1 className="text-3xl">Selamat {getGreet(waktu.getHours())} {nama}</h1>
           <h1 className="text-5xl">{waktu.toLocaleTimeString('id-ID',{
@@ -86,7 +82,7 @@ export default function Home() {
               <MapContainer
                 center={[location.lat, location.lng]}
                 zoom={30}
-                style={{ height: "200px", width: "90%",zIndex:1 }}
+                style={{ height: "300px", width: "90%",zIndex:1 }}
               >
                 <TileLayer
                   url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -103,9 +99,9 @@ export default function Home() {
             {jarakKeKantor !== null && (
                 dalamJangkauan ? (
                     <div className="flex justify-center gap-2 p-2 border-2 border-black rounded-md mt-2">
-                        <AlertCircleIcon/>
+                        <AlertCircleIcon size={30}/>
                         <p>
-                            Lokasi kamu berada {jarakKeKantor} meter dari kantor <br />
+                            Lokasi kamu berada {jarakKeKantor} meter dari kantor
                             (<span className="text-green-500 font-medium"> dalam jangkauan </span>)
                         </p>
                     </div>
@@ -113,7 +109,7 @@ export default function Home() {
                     <div className="flex justify-center gap-2 p-2 border-2 border-red-500 rounded-md mt-2">
                         <AlertCircleIcon className="text-red-500"/>
                         <p>
-                            Lokasi kamu berada {jarakKeKantor} meter dari kantor&nbsp;
+                            Lokasi kamu berada {jarakKeKantor} meter dari kantor
                             (<span className="text-red-500 font-medium">di luar jangkauan</span>)
                         </p>
                     </div>
