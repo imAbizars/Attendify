@@ -58,16 +58,16 @@ export default function Login(){
         <div className="flex min-h-screen justify-center items-center">
             <Card className="w-full max-w-sm m-4">
                 <CardHeader>
-                    <CardTitle className="text-2xl font-bold">Attendify </CardTitle>
-                    <CardDescription className="text-md">
+                    <CardTitle className="text-2xl font-bold">MillTendify</CardTitle>
+                    <CardDescription className="text-sm">
                     Silahkan Login Terlebih Dahulu
                     </CardDescription>
                 </CardHeader>
                 <CardContent className="mb-4">
                     <form >
-                    <div className="flex flex-col gap-6">
+                    <div className="flex flex-col gap-4">
                         {error && <p className="text-red-500 text-sm">{error}</p>}
-                        <div className="grid gap-2">
+                        <div className="grid gap-2 text-sm">
                         <Label htmlFor="email">Email</Label>
                         <Input
                             id="email"
@@ -77,7 +77,7 @@ export default function Login(){
                             required
                         />
                         </div>
-                        <div className="grid gap-2">
+                        <div className="grid gap-2 text-sm">
                         <div className="flex items-center">
                             <Label htmlFor="password">Password</Label>
                             
@@ -95,7 +95,7 @@ export default function Login(){
                 <CardFooter className="flex-col gap-2">
                     <Button 
                     onClick={handleLogin} 
-                    className="w-full"
+                    className="w-full font-bold "
                     disabled={loading}
                     >
                     {loading?<Loader2 className="animate-spin"/>: "Login"}

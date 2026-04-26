@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import {useAbsen} from "@/hooks/absen/useAbsen";
-import { MapContainer, TileLayer, Marker, Circle } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Circle,Polyline } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import icon from "leaflet/dist/images/marker-icon.png";
@@ -15,7 +15,8 @@ import { AlertCircleIcon,Loader2} from "lucide-react";
 import {useGeolocation} from "@/lib/utilites/UseGeolocation";
 import { Card } from "@/components/ui/card";
 import { useWaktu } from "@/lib/utilites/useWaktu";
-
+import { useRouting } from "../../../hooks/routingMap/useRouting";
+import AnimatedPolyline from "../../ui/AnimatedPolyline";
 
 
 export default function Home() {
@@ -25,6 +26,8 @@ export default function Home() {
   const nama = user?.nama || "user"
   //absen
   const { statusAbsen, loading, message, handleAbsenMasuk, handleAbsenKeluar, clearMessage, isSuccess, terlambat, clearTerlambat,info} = useAbsen();
+  const { routePoints, jarakRute, durasiRute, loadingRute } = useRouting(location);
+  const KOORDINAT_KANTOR = { lat: -6.295991, lng: 106.902458 };
   useEffect(() => {
   if (message) {
     const timer = setTimeout(() => {
@@ -79,21 +82,68 @@ export default function Home() {
           <h1 className="text-xl">Lokasi Kamu Berada : </h1>
             <Card>
               <div className="flex justify-center">
-              <MapContainer
-                center={[location.lat, location.lng]}
-                zoom={30}
-                style={{ height: "300px", width: "90%",zIndex:1 }}
-              >
-                <TileLayer
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                />
-                <Marker position={[location.lat, location.lng]} />
-                <Circle
+                <MapContainer
                   center={[location.lat, location.lng]}
-                  radius={50}
-                />
-              </MapContainer>
+                  zoom={50}
+                  style={{ height: "300px", width: "90%",zIndex:1 }}
+                >
+                  <TileLayer
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  />
+                  <Marker position={[location.lat, location.lng]} />
+                  <Marker
+                      position={[KOORDINAT_KANTOR.lat, KOORDINAT_KANTOR.lng]}
+                      icon={L.divIcon({
+                        className: "",
+                        html: `<div style="
+                          background: #3dd9e4;
+                          width: 14px;
+                          height: 14px;
+                          border-radius: 50%;
+                          border: 2px solid white;
+                          box-shadow: 0 0 4px rgba(0,0,0,0.5)
+                        "></div>`,
+                        iconAnchor: [7, 7],
+                      })}
+                    />
+                    <Circle
+                      center={[KOORDINAT_KANTOR.lat, KOORDINAT_KANTOR.lng]}
+                      radius={35}
+                      pathOptions={{
+                        color: "#3b82f6" ,
+                        fillColor:  "#3b82f6" ,
+                        fillOpacity: 0.15,
+                      }}
+                    />
+
+                    {/* Garis dari user ke kantor */}
+                    {routePoints.length > 0 && (
+                      <>
+                        <Polyline
+                          positions={routePoints}
+                          pathOptions={{ color: "#cbd5e1", weight: 5 }}
+                        />
+                        <AnimatedPolyline
+                          positions={routePoints}
+                          color={"#3b82f6"}
+                        />
+                        
+                      </>
+                    )}
+                </MapContainer>
               </div>  
+                {(jarakRute || loadingRute) && (
+                  <div className="flex gap-4 justify-center text-sm mt-1">
+                    {loadingRute ? (
+                      <p className="text-gray-400">Menghitung rute...</p>
+                    ) : (
+                      <>
+                        <span>🛵 Jarak rute: <strong>{jarakRute} km</strong></span>
+                        <span>⏱ Estimasi: <strong>{durasiRute} menit</strong></span>
+                      </>
+                    )}
+                  </div>
+                )}
             </Card>
           <div className="mb-2 space-y-1 text-md">
             {jarakKeKantor !== null && (
