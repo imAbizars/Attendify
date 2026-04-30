@@ -133,13 +133,13 @@ export default function Home() {
                 </MapContainer>
               </div>  
                 {(jarakRute || loadingRute) && (
-                  <div className="flex gap-4 justify-center text-sm mt-1">
+                  <div className="flex gap-6 justify-center text-sm mt-1">
                     {loadingRute ? (
                       <p className="text-gray-400">Menghitung rute...</p>
                     ) : (
                       <>
-                        <span>🛵 Jarak rute: <strong>{jarakRute} km</strong></span>
-                        <span>⏱ Estimasi: <strong>{durasiRute} menit</strong></span>
+                        <span>Jarak rute: <strong>{jarakRute} km</strong></span>
+                        <span>Estimasi:<strong>{durasiRute} menit</strong></span>
                       </>
                     )}
                   </div>
