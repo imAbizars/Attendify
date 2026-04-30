@@ -10,10 +10,9 @@ import {
     DialogFooter,
 } from "@/components/ui/dialog";
 import { Card } from "@/components/ui/card";
+import {PenBox,FileDown,KeyRound} from "lucide-react"
 
 export default function Profile() {
-    const user = JSON.parse(localStorage.getItem("user"));
-    const nama = user?.nama || "user";
     const [preview, setPreview] = useState(null);
     const [selectedFile, setSelectedFile] = useState(null);
     const [openModal, setOpenModal] = useState(false);
@@ -21,23 +20,22 @@ export default function Profile() {
     const { 
         uploadPhoto,
         loading, 
-        getPhotoUser,
+        fetchInfoUser,
         photoProfile,
-        fetchTotalAbsenUser,
-        totalDataAbsen,
-        totalDataAbsenIzin,
-        fetchTotalAbsenUserIzin,
-        totalDataAbsenTerlambat,
-        fetchTotalAbsenUserTerlambat,
+        fetchStatistikAbsen,
+        totalHadir,
+        totalIzin,
+        totalTerlambat,
         infoRank,
-        infoRankUser
+        infoRankUser,
+        email,
+        nama,
+        noTelepon
     } = useProfile();
 
     useEffect(() => {
-        getPhotoUser();
-        fetchTotalAbsenUser();
-        fetchTotalAbsenUserIzin();
-        fetchTotalAbsenUserTerlambat();
+        fetchInfoUser();
+        fetchStatistikAbsen();
         infoRank();
     }, []);
     // saat pilih file, tampilkan preview
@@ -74,8 +72,8 @@ export default function Profile() {
     };
 
     return (
-        <div className="flex flex-col items-center min-h-screen pt-5">
-            <div className="w-full flex flex-col items-center gap-4 pt-10 p-4">
+        <div className="flex flex-col items-center min-h-screen p-5 pb-8">
+            <div className="w-full flex flex-col items-center gap-4 pt-8 p-4">
                 <div className="relative w-40 h-40">
                     <div className="w-40 h-40 rounded-full overflow-hidden border-2 border-black">
                         {photoProfile ? (
@@ -95,41 +93,56 @@ export default function Profile() {
                         <PenIcon className="w-4 h-4"/>
                     </Button>
                 </div>
-
                 <div className="flex flex-col items-center gap-2">
                     <div className="text-2xl font-bold">{nama}</div>
                     <span
                         className="h-2 bg-main rounded-lg block border-2"
-                        style={{ width: `${nama.length * 14}px` }} 
+                        style={{ width: `${nama.length * 14}px` }}
                     />
                 </div>
 
-                <h1 className="text-xl">Kamu Adalah {infoRankUser}</h1>
-                <Card className="w-full p-8 bg-main">
+                <span className="text-xs px-3 py-1 bg-main text-white rounded-full font-medium shadow-sm border-2 border-black">
+                        🏆 {infoRankUser}
+                </span>
+                <Card className="w-full p-4 bg-main">
                     <div className="flex flex-col gap-2">
                         <h1 className="text-md ">Ringkasan Kehadiran Kamu</h1>
 
                         {[
-                            { label: "Total Hadir", value: totalDataAbsen },
-                            { label: "Total Izin", value: totalDataAbsenIzin },
-                            { label: "Total Terlambat", value: totalDataAbsenTerlambat },
+                            { label: "Total Hadir", value: totalHadir},
+                            { label: "Total Izin", value: totalIzin },
+                            { label: "Total Terlambat", value: totalTerlambat},
                         ].map(({ label, value }) => (
                             <div key={label} className="flex text-xs">
                                 <span className="w-25">{label}</span>
                                 <span>: {value}</span>
                             </div>
                         ))}
-                        <h1 className="text-md">Data Pribadi</h1>
-                        {[
-                            {label : "Email", value : "email"},
-                            {label : "Password",value : "password"},
-                            {label : "No Telepon",value : "telepon"} 
-                        ].map(({label,value})=>(
-                            <div key={label} className="flex text-xs">
-                                <span className="w-25">{label}</span>
-                                <span>: {value}</span>
+                        <Button className="flex bg-background mt-2 text-xs"> <FileDown/> Ekspor PDF</Button>
+                    </div>
+                </Card>
+                <Card className="w-full p-4 bg-main">
+                    <h1 className="text-md">Data Pribadi</h1>
+                    <div className="flex flex-col gap-2">
+                        <div className="flex text-xs items-center justify-between ">
+                            <div className="flex items-center min-w-0 flex-1">
+                                <span className="w-25 shrink-0">Email</span>
+                                <span className="truncate">: {email}</span>
                             </div>
-                        ))}
+                            <Button className="w-6 h-9 shrink-0"><PenBox/></Button>
+                        </div>
+                        <div className="flex text-xs items-center justify-between">
+                            <div className="flex items-center min-w-0 flex-1">
+                                <span className="w-25 shrink-0">No Telepon</span>
+                                <span className="truncate">: {noTelepon}</span>
+                            </div>
+                            <Button className="w-6 h-9 shrink-0"><PenBox/></Button>
+                        </div>
+                        <Button className="flex bg-background mt-2 text-xs"
+                        >
+                            <KeyRound/>
+                            Ganti Password
+                        </Button>
                     </div>
                 </Card>
             </div>

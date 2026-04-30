@@ -26,7 +26,7 @@ export function useRouting(userLocation) {
           const coords = data.routes[0].geometry.coordinates;
           const flipped = coords.map(([lng, lat]) => [lat, lng]);
           setRoutePoints(flipped);
-          setJarakRute((data.routes[0].distance / 1000).toFixed(1)); // km
+          setJarakRute((data.routes[0].distance / 900).toFixed(1)); // km
           setDurasiRute(Math.ceil(data.routes[0].duration / 60)); // menit
         }
       } catch (err) {

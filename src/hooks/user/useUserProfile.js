@@ -2,24 +2,34 @@ import { useState, useTransition } from "react";
 import { axiosInstance } from "@/lib/axios/axios";
 
 export const useProfile = () => {
+
     const [loading, setLoading] = useState(false);
     const [photoProfile,setPhotoProfile] = useState(null);
     const [message, setMessage] = useState("");
-    const [totalDataAbsen,setTotalDataAbsen] = useState(0);
-    const [totalDataAbsenIzin,setTotalDataAbsenIzin] = useState(0);
-    const [totalDataAbsenTerlambat,setTotalDataAbsenTerlambat] = useState(0);
+    const [totalHadir,setTotalHadir] = useState(0);
+    const [totalIzin,setTotalIzin] = useState(0);
+    const [totalTerlambat,setTotalTerlambat] = useState(0);
     const [infoRankUser,setInfoRankUser] = useState("");
-    const getPhotoUser = async () => {
+    const [email,setEmail] = useState("");
+    const [nama,setNama]  = useState("");
+    const [noTelepon,setNoTelepon] = useState("");
+
+
+    const fetchInfoUser = async () => {
         setLoading(true);
         try {
             const res = await axiosInstance.get("/user/me");
-            setPhotoProfile(res.data.data.photo);
+            const {email : emailUser ,name : nama, phonenumber : noTelepon ,photo : photoUser} = res.data.data;
+            setEmail(emailUser);
+            setNama(nama);
+            setNoTelepon(noTelepon);
+            setPhotoProfile(photoUser);
         } catch(err) {
-            setMessage("gagal mengambil foto");
+            setMessage("gagal mengambil data");
         } finally {
             setLoading(false);
-        }
-    }
+        };
+    };
     const uploadPhoto = async (file) => {
         setLoading(true);
         try {
@@ -38,59 +48,49 @@ export const useProfile = () => {
             setMessage(err.response?.data?.message || "Gagal upload foto");
         } finally {
             setLoading(false);
-        }
+        };
     };
 
-    const fetchTotalAbsenUser = async () => {
-        try{
-            const res = await axiosInstance.get("/absen/absen-user");
-            setTotalDataAbsen(res.data.data)
-        }catch(err){
-            setMessage("data gagal dipanggil");
-        }
-    }
-    
-    const fetchTotalAbsenUserIzin = async () => {
-        try{
-            const res = await axiosInstance.get("/absen/absen-user-izin");
-            setTotalDataAbsenIzin(res.data.data);
-        }catch(err){
-            setMessage(err)
-        }
-    }
-    const fetchTotalAbsenUserTerlambat = async () => {
-        try{
-            const res = await axiosInstance.get("/absen/absen-user-terlambat");
-            setTotalDataAbsenTerlambat(res.data.data);
-        }catch(err){
-            setMessage(err)
-        }
-    }
+    const fetchStatistikAbsen = async () => {
+        try {
+            const res = await axiosInstance.get("absen/statistik-absen-user");
+            const { hadir, terlambat, izin, totalHadir } = res.data.data;
+
+            setTotalHadir(totalHadir);
+            setTotalIzin(izin);
+            setTotalTerlambat(terlambat);
+        } catch (error) {
+            console.error(error);
+        };
+    };
     const infoRank = async () => {
-        if (totalDataAbsen <= 240) {
+        if (totalHadir <= 240) {
             setInfoRankUser("Pekerja Keras");
-        } else if (totalDataAbsen <= 360) {
+        } else if (totalHadir <= 360) {
             setInfoRankUser("Rajin");
-        } else if (totalDataAbsen <= 720) {
+        } else if (totalHadir <= 720) {
             setInfoRankUser("Teladan");
         } else {
             setInfoRankUser("Loyal");
-        }
+        };
     };
+    
     return { 
         uploadPhoto, 
         loading,
         message,
-        getPhotoUser,
+        fetchInfoUser,
         photoProfile,
-        fetchTotalAbsenUser,
-        totalDataAbsen,
-        totalDataAbsenIzin,
-        setTotalDataAbsenIzin,
-        fetchTotalAbsenUserIzin,
-        totalDataAbsenTerlambat,
-        fetchTotalAbsenUserTerlambat,
+        fetchStatistikAbsen,
+        totalHadir,
+        totalIzin,
+        totalTerlambat,
         infoRank,
-        infoRankUser
+        infoRankUser,
+        email,
+        nama,
+        noTelepon,
+
+        
     };
 };
