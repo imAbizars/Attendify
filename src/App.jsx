@@ -12,6 +12,8 @@ import Riwayat from "./components/pages/dasboard/Riwayat";
 import DashboardLayout from "./components/pages/dasboard/DashboardLayout";
 import Login from "./components/pages/main/Login";
 import ProtectedRoute from "./lib/protected/ProtectedRoute"
+import LupaPassword from "./components/pages/main/LupaPasssword";
+import ResetPassword from "./components/pages/main/ResetPassword";
 const queryClient = new QueryClient();
 
 export default function App(){
@@ -19,7 +21,9 @@ export default function App(){
     <QueryClientProvider client={queryClient}>       
       <Router>
         <Routes>
-            <Route path="/"element={<Login/>} />
+          <Route path="/"element={<Login/>} />
+          <Route path="/lupapassword" element ={<LupaPassword/>}/>
+          <Route path="/reset-password" element={<ResetPassword/>}/>
           <Route element={
                         <ProtectedRoute>
                             <MainLayout />
@@ -30,20 +34,17 @@ export default function App(){
             <Route path="/profile" element={<Profile/>}/>
             <Route path="/izin" element={<Izin/>}/>
           </Route>
-            <Route path="/dashboard" element={
-                        <ProtectedRoute allowedRole="ADMIN">
-                            <DashboardLayout />
-                        </ProtectedRoute>
-                    }>
-              <Route index element={<Dashboard/>} /> 
-              <Route path="pegawai" element={<DataUser />} />
-              <Route path="riwayat" element={<Riwayat />} />  
-            </Route>
-
+          <Route path="/dashboard" element={
+                      <ProtectedRoute allowedRole="ADMIN">
+                          <DashboardLayout />
+                      </ProtectedRoute>
+                  }>
+            <Route index element={<Dashboard/>} /> 
+            <Route path="pegawai" element={<DataUser />} />
+            <Route path="riwayat" element={<Riwayat />} />  
+          </Route>
         </Routes>
       </Router>
     </QueryClientProvider>    
-    
-
   )
 }

@@ -26,34 +26,35 @@ export default function Login(){
     const navigate = useNavigate();
     const [alertSuccess,setAlertSuccess] = useState(false);
     const [userRole, setUserRole] = useState("");
+    
     const handleLogin = async (e) => {
-    e.preventDefault();
-    setError(""); 
+        e.preventDefault();
+        setError(""); 
 
-    if (!email && !password) return setError("Email dan password tidak boleh kosong");
-    if (!email) return setError("Email tidak boleh kosong");
-    if (!password) return setError("Password tidak boleh kosong");
-    if (!/\S+@\S+\.\S+/.test(email)) return setError("Format email tidak valid");
+        if (!email && !password) return setError("Email dan password tidak boleh kosong");
+        if (!email) return setError("Email tidak boleh kosong");
+        if (!password) return setError("Password tidak boleh kosong");
+        if (!/\S+@\S+\.\S+/.test(email)) return setError("Format email tidak valid");
 
-    setLoading(true); 
-    try {
-        const payload = await authLogin(email, password);
-        setUserRole(payload.role);
-        setAlertSuccess(true);
-        
-    } catch (err) {
-        const message = err.response?.data?.message;
-        if (message === "Email tidak terdaftar") {
-            setError("Email tidak terdaftar");
-        } else if (message === "Password salah") {
-            setError("Password salah");
-        } else {
-            setError("Terjadi kesalahan, coba lagi");
+        setLoading(true); 
+        try {
+            const payload = await authLogin(email, password);
+            setUserRole(payload.role);
+            setAlertSuccess(true);
+            
+        } catch (err) {
+            const message = err.response?.data?.message;
+            if (message === "Email tidak terdaftar") {
+                setError("Email tidak terdaftar");
+            } else if (message === "Password salah") {
+                setError("Password salah");
+            } else {
+                setError("Terjadi kesalahan, coba lagi");
+            }
+        } finally {
+            setLoading(false);
         }
-    } finally {
-        setLoading(false);
-    }
-};
+    };
     return(
         <div className="flex min-h-screen justify-center items-center">
             <Card className="w-full max-w-sm m-4">
@@ -89,6 +90,7 @@ export default function Login(){
                         value={password}
                         onChange={(e) => setPassword(e.target.value)} />
                         </div>
+                        <a href="/lupapassword">Lupa Password?</a>
                     </div>
                     </form>
                 </CardContent>
@@ -102,7 +104,6 @@ export default function Login(){
                     </Button>
                 </CardFooter>
             </Card>
-            {/* todo : add animation login */}
             {alertSuccess && (
                 <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
                     <Alert className="w-50 h-50 flex items-center justify-center bg-white">

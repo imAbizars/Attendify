@@ -108,7 +108,7 @@ export default function Home() {
                     />
                     <Circle
                       center={[KOORDINAT_KANTOR.lat, KOORDINAT_KANTOR.lng]}
-                      radius={35}
+                      radius={45}
                       pathOptions={{
                         color: "#3b82f6" ,
                         fillColor:  "#3b82f6" ,

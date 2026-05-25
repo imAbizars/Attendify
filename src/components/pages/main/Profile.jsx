@@ -11,11 +11,13 @@ import {
 } from "@/components/ui/dialog";
 import { Card } from "@/components/ui/card";
 import {PenBox,FileDown,KeyRound} from "lucide-react"
+import { Input } from "../../ui/input";
 
 export default function Profile() {
     const [preview, setPreview] = useState(null);
     const [selectedFile, setSelectedFile] = useState(null);
-    const [openModal, setOpenModal] = useState(false);
+    const [openModalPhoto, setOpenModalPhoto] = useState(false);
+    const [openModalPassword,setOpenModalPassword] = useState(false);
     const inputRef = useRef(null);
     const { 
         uploadPhoto,
@@ -39,6 +41,13 @@ export default function Profile() {
         infoRank();
     }, []);
     // saat pilih file, tampilkan preview
+    const handleKlikPen = () => {
+        setPreview(photoProfile || null); 
+        setOpenModalPhoto(true);
+    };
+    const handleOpenModalPw = () =>{
+        setOpenModalPassword(true);
+    }
     const handlePilihFile = (e) => {
         const file = e.target.files[0];
         if (!file) return;
@@ -54,18 +63,14 @@ export default function Profile() {
         const newPhoto = await uploadPhoto(selectedFile);
         if (newPhoto) {
             setPhoto(newPhoto);
-            setOpenModal(false);
+            setOpenModalPhoto(false);
             setPreview(null);
             setSelectedFile(null);
         }
     };
-    const handleKlikPen = () => {
-        setPreview(photoProfile || null); 
-        setOpenModal(true);
-    };
 
     const handleBatal = () => {
-        setOpenModal(false);
+        setOpenModalPhoto(false);
         setPreview(null);
         setSelectedFile(null);
         inputRef.current.value = ""; 
@@ -138,7 +143,9 @@ export default function Profile() {
                             </div>
                             <Button className="w-6 h-9 shrink-0"><PenBox/></Button>
                         </div>
-                        <Button className="flex bg-background mt-2 text-xs"
+                        <Button
+                        onClick={handleOpenModalPw} 
+                        className="flex bg-background mt-2 text-xs"
                         >
                             <KeyRound/>
                             Ganti Password
@@ -147,8 +154,28 @@ export default function Profile() {
                 </Card>
             </div>
 
-            {/* Modal Preview */}
-            <Dialog open={openModal} onOpenChange={setOpenModal}>
+            {/* modal password */}
+            <Dialog open={openModalPassword} onOpenChange={setOpenModalPassword}>
+                <DialogContent className="px-15 py-13">
+                    <DialogHeader>
+                        <DialogTitle>Masukkan Password Baru</DialogTitle>
+                    </DialogHeader>
+                    <Input
+                    placeholder="Password Baru"
+                    type="password"
+                    />
+                    <Input
+                    placeholder="Konfirmasi Password Baru"
+                    type="password"
+                    />
+                    <Button>
+                        Ganti Password
+                    </Button>
+                </DialogContent>
+            </Dialog>
+
+            {/* Modal photo Preview */}
+            <Dialog open={openModalPhoto} onOpenChange={setOpenModalPhoto}>
                 <DialogContent>
                     <DialogHeader>
                         <DialogTitle>Preview Foto Profile</DialogTitle>

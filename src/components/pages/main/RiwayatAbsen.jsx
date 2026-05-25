@@ -32,22 +32,6 @@ export default function RiwayatAbsen() {
                 <h2 className="text-2xl">Berikut Riwayat Absen Kamu</h2>
             </div>
 
-            <div className="flex h-27 gap-2">
-                <Card className="bg-main p-4 w-1/3 text-white font-bold ">
-                        <p className="text-xs font-medium">Total Hadir</p>
-                    <p className="text-3xl">{totalHadir}</p>
-                </Card>
-                <Card className="bg-main p-4 w-1/3 text-white font-bold">
-                        <p className="text-xs font-medium">Terlambat</p>
-                    <p className="text-3xl">{totalTerlambat}</p>
-                </Card>
-                <Card className="bg-main p-4 w-1/3 text-white font-bold">
-                    <div>
-                        <p className="text-xs font-medium">Tidak Hadir</p>
-                    </div>
-                    <p className="text-3xl">{totalTidakHadir}</p>
-                </Card>
-            </div>
             <Popover>
                 <PopoverTrigger asChild>
                     <Button className="w-1/2 text-black" variant="noShadow">
@@ -73,6 +57,22 @@ export default function RiwayatAbsen() {
                     </div>
                 </PopoverContent>
             </Popover>
+            <div className="flex h-27 gap-2">
+                <Card className="bg-main p-4 w-1/3 text-white font-bold ">
+                        <p className="text-xs font-medium">Total Hadir</p>
+                    <p className="text-3xl">{totalHadir}</p>
+                </Card>
+                <Card className="bg-main p-4 w-1/3 text-white font-bold">
+                        <p className="text-xs font-medium">Terlambat</p>
+                    <p className="text-3xl">{totalTerlambat}</p>
+                </Card>
+                <Card className="bg-main p-4 w-1/3 text-white font-bold">
+                    <div>
+                        <p className="text-xs font-medium">Tidak Hadir</p>
+                    </div>
+                    <p className="text-3xl">{totalTidakHadir}</p>
+                </Card>
+            </div>
 
             {/* Tabel Riwayat */}
             <div className="rounded-md border">
