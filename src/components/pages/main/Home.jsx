@@ -217,7 +217,7 @@ export default function Home() {
           </div>
         )}
         <div className="text-center space-y-4 ">
-          {!openWaktu && (
+          {openWaktu && (
             <Card className="px-4 py-3 space-y-2">
               <JamItem label="Jam Masuk" value={jamMasuk} />
               <JamItem label="Jam Keluar" value={jamKeluar} />
