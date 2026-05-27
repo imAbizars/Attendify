@@ -11,7 +11,7 @@ import { Alert,AlertDescription,AlertTitle} from "@/components/ui/alert";
 import Lottie from "lottie-react";
 import SuccesAnimation from "@/assets/animation/Successfull Animation.json";
 import FailedAnimation from "@/assets/animation/cross.json";
-import { AlertCircleIcon,Loader2} from "lucide-react";
+import { AlertCircleIcon,Loader2,AlertTriangle} from "lucide-react";
 import {useGeolocation} from "@/lib/utilites/UseGeolocation";
 import { Card } from "@/components/ui/card";
 import { useWaktu } from "@/lib/utilites/useWaktu";
@@ -25,7 +25,21 @@ export default function Home() {
   const user = JSON.parse(localStorage.getItem("user"));
   const nama = user?.nama || "user"
   //absen
-  const { statusAbsen, loading, message, handleAbsenMasuk, handleAbsenKeluar, clearMessage, isSuccess, terlambat, clearTerlambat,info,jamMasuk,jamKeluar} = useAbsen();
+  const { 
+    statusAbsen,
+    loading,
+    message,
+    handleAbsenMasuk,
+    handleAbsenKeluar,
+    clearMessage,
+    isSuccess,
+    terlambat, 
+    clearTerlambat,
+    info,
+    jamMasuk,
+    jamKeluar,
+    openWaktu
+  } = useAbsen();
   const { routePoints, jarakRute, durasiRute, loadingRute } = useRouting(location);
   
   const KOORDINAT_KANTOR = { lat: -6.295991, lng: 106.902458 };
@@ -38,14 +52,7 @@ export default function Home() {
     return () => clearTimeout(timer);
   }
   }, [message]);
-  useEffect(() => {
-    if (terlambat) {
-        const timer = setTimeout(() => {
-            clearTerlambat();
-        }, 5000); 
-        return () => clearTimeout(timer);
-    }
-}, [terlambat]);
+  
   const {waktu} = useWaktu();
   const getGreet = (jam) => {
       if (jam >= 5 && jam < 12) return "Pagi";
@@ -168,7 +175,7 @@ export default function Home() {
                     <div className="flex justify-center gap-2 p-2 border-2 border-black rounded-md mt-2">
                         <AlertCircleIcon size={30}/>
                         <p>
-                            Lokasi kamu berada {jarakKeKantor} meter dari kantor
+                            Lokasi kamu berada {jarakKeKantor} meter dari jarak tujuan
                             (<span className="text-green-500 font-medium"> dalam jangkauan </span>)
                         </p>
                     </div>
@@ -176,16 +183,11 @@ export default function Home() {
                     <div className="flex justify-center gap-2 p-2 border-2 border-red-500 rounded-md mt-2">
                         <AlertCircleIcon className="text-red-500"/>
                         <p>
-                            Lokasi kamu berada {jarakKeKantor} meter dari kantor
+                            Lokasi kamu berada {jarakKeKantor} meter dari jarak tujuan
                             (<span className="text-red-500 font-medium">di luar jangkauan</span>)
                         </p>
                     </div>
                 )
-            )}
-            {terlambat && (
-                <p className="text-red-500 text-sm font-medium mt-2">
-                    ⚠️ Kamu terlambat {terlambat}
-                </p>
             )}
         </div>
         </>
@@ -215,14 +217,21 @@ export default function Home() {
           </div>
         )}
         <div className="text-center space-y-4 ">
-          {
-            isSuccess && (
+          {!openWaktu && (
             <Card className="px-4 py-3 space-y-2">
               <JamItem label="Jam Masuk" value={jamMasuk} />
               <JamItem label="Jam Keluar" value={jamKeluar} />
+
+              {terlambat && (
+                <div className="flex items-center gap-2 rounded-md bg-red-50 px-3 py-2 justify-center ">
+                  <AlertTriangle className="h-4 w-4 shrink-0" />
+                  <p className="text-sm">
+                    Kamu terlambat <span className="font-semibold text-red-500">{terlambat}</span> nih.
+                  </p>
+                </div>
+              )}
             </Card>
-            )
-          }
+          )}
           {info && (
             <h4>
               {info}

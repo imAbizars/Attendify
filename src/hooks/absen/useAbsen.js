@@ -14,8 +14,10 @@ export const useAbsen = () => {
     const [terlambat,setTerlambat] = useState(null);
     const [jamMasuk,setJamMasuk] = useState(null);
     const [jamKeluar,setJamKeluar] = useState(null);
+    const [openWaktu,setOpenWaktu] = useState(false);
     const clearMessage = () => setMessage("");
-    const clearTerlambat = () => setTerlambat(null);
+    
+    
     const BATAS_JAM = 8;   
     const BATAS_MENIT = 0;
     
@@ -25,12 +27,11 @@ export const useAbsen = () => {
                 const dataAbsen = await absenHariIni();
                 
                 if (dataAbsen) {
-                    const absen = dataAbsen.data; 
-                    setJamMasuk(absen.jamMasuk);
-                    setJamKeluar(absen.jamKeluar);
+                    setJamMasuk(dataAbsen.jamMasuk);
+                    setJamKeluar(dataAbsen.jamKeluar);
                     setStatusAbsen({
-                        sudahMasuk: !!absen.jamMasuk,
-                        sudahKeluar: !!absen.jamKeluar, 
+                        sudahMasuk: !!dataAbsen.jamMasuk,
+                        sudahKeluar: !!dataAbsen.jamKeluar, 
                     });
                 }
             } catch (error) {
@@ -50,6 +51,7 @@ export const useAbsen = () => {
             setJamMasuk(res.data.jamMasuk);
             setStatusAbsen((prev) => ({ ...prev, sudahMasuk: true }));
             setisSuccess(true);
+            setOpenWaktu(true);
             setMessage(res.message);
             const sekarang = new Date();
             const jam = sekarang.getHours();
@@ -82,7 +84,10 @@ export const useAbsen = () => {
             setJamKeluar(res.data.jamKeluar);
             setisSuccess(true);
             setMessage(res.message);
-            setInfo("Absen Berikutnya Pada Pukul 08:00")
+            setInfo("Absen Berikutnya Pada Pukul 08:00");
+            setTimeout(()=>{
+                setOpenWaktu(false);
+            },5000)
         } catch (err) {
             setisSuccess(false);
             setMessage(err.response?.data?.message || "Absen keluar gagal");
@@ -91,5 +96,5 @@ export const useAbsen = () => {
         }
     };
     
-    return { statusAbsen, loading, message, handleAbsenMasuk, handleAbsenKeluar ,clearMessage,isSuccess,terlambat,clearTerlambat,info,jamMasuk,jamKeluar};
+    return { statusAbsen, loading, message, handleAbsenMasuk, handleAbsenKeluar ,clearMessage,isSuccess,terlambat,info,jamMasuk,jamKeluar,openWaktu};
 };
