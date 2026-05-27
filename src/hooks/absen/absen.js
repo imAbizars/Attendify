@@ -2,6 +2,7 @@ import { axiosInstance } from "@/lib/axios/axios";
 
 export const absenMasuk = async (latitude, longitude) => {
     const res = await axiosInstance.post("/absen/masuk", { latitude, longitude });
+    console.log(res.data)
     return res.data;
 };
 

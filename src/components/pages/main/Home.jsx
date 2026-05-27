@@ -25,9 +25,11 @@ export default function Home() {
   const user = JSON.parse(localStorage.getItem("user"));
   const nama = user?.nama || "user"
   //absen
-  const { statusAbsen, loading, message, handleAbsenMasuk, handleAbsenKeluar, clearMessage, isSuccess, terlambat, clearTerlambat,info} = useAbsen();
+  const { statusAbsen, loading, message, handleAbsenMasuk, handleAbsenKeluar, clearMessage, isSuccess, terlambat, clearTerlambat,info,jamMasuk,jamKeluar} = useAbsen();
   const { routePoints, jarakRute, durasiRute, loadingRute } = useRouting(location);
+  
   const KOORDINAT_KANTOR = { lat: -6.295991, lng: 106.902458 };
+  
   useEffect(() => {
   if (message) {
     const timer = setTimeout(() => {
@@ -51,6 +53,21 @@ export default function Home() {
       if (jam >= 15 && jam < 19) return "Sore";
       return "Malam";
   }
+  const JamItem = ({ label, value }) => (
+    <div className="flex justify-between items-center">
+      <span className="text-sm ">{label}</span>
+      <span className="font-medium">
+        {value
+          ? new Date(value).toLocaleTimeString("id-ID", {
+              hour: "2-digit",
+              minute: "2-digit",
+              timeZone: "Asia/Jakarta",
+            })
+          : "-"}
+      </span>
+    </div>
+  );
+
   return (
     <div className="flex flex-col gap-4 p-4 pt-10  min-h-screen w-full">
         <div className="flex flex-col gap-2">
@@ -198,6 +215,14 @@ export default function Home() {
           </div>
         )}
         <div className="text-center space-y-4 ">
+          {
+            isSuccess && (
+            <Card className="px-4 py-3 space-y-2">
+              <JamItem label="Jam Masuk" value={jamMasuk} />
+              <JamItem label="Jam Keluar" value={jamKeluar} />
+            </Card>
+            )
+          }
           {info && (
             <h4>
               {info}

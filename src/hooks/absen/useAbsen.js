@@ -12,6 +12,8 @@ export const useAbsen = () => {
     const [info,setInfo] = useState(null);
     const [isSuccess, setisSuccess] = useState(false);
     const [terlambat,setTerlambat] = useState(null);
+    const [jamMasuk,setJamMasuk] = useState(null);
+    const [jamKeluar,setJamKeluar] = useState(null);
     const clearMessage = () => setMessage("");
     const clearTerlambat = () => setTerlambat(null);
     const BATAS_JAM = 8;   
@@ -23,9 +25,12 @@ export const useAbsen = () => {
                 const dataAbsen = await absenHariIni();
                 
                 if (dataAbsen) {
+                    const absen = dataAbsen.data; 
+                    setJamMasuk(absen.jamMasuk);
+                    setJamKeluar(absen.jamKeluar);
                     setStatusAbsen({
-                        sudahMasuk: !!dataAbsen.jamMasuk,
-                        sudahKeluar: !!dataAbsen.jamKeluar,
+                        sudahMasuk: !!absen.jamMasuk,
+                        sudahKeluar: !!absen.jamKeluar, 
                     });
                 }
             } catch (error) {
@@ -42,10 +47,10 @@ export const useAbsen = () => {
         setInfo(null);
         try {
             const res = await absenMasuk(latitude, longitude);
+            setJamMasuk(res.data.jamMasuk);
             setStatusAbsen((prev) => ({ ...prev, sudahMasuk: true }));
             setisSuccess(true);
             setMessage(res.message);
-
             const sekarang = new Date();
             const jam = sekarang.getHours();
             const menit = sekarang.getMinutes();
@@ -74,6 +79,7 @@ export const useAbsen = () => {
         try {
             const res = await absenKeluar();
             setStatusAbsen((prev) => ({ ...prev, sudahKeluar: true }));
+            setJamKeluar(res.data.jamKeluar);
             setisSuccess(true);
             setMessage(res.message);
             setInfo("Absen Berikutnya Pada Pukul 08:00")
@@ -85,5 +91,5 @@ export const useAbsen = () => {
         }
     };
     
-    return { statusAbsen, loading, message, handleAbsenMasuk, handleAbsenKeluar ,clearMessage,isSuccess,terlambat,clearTerlambat,info };
+    return { statusAbsen, loading, message, handleAbsenMasuk, handleAbsenKeluar ,clearMessage,isSuccess,terlambat,clearTerlambat,info,jamMasuk,jamKeluar};
 };
