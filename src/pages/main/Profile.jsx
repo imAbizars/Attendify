@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { Card } from "@/components/ui/card";
 import {PenBox,FileDown,KeyRound} from "lucide-react"
-import { Input } from "../../ui/input";
+import { Input } from "../../components/ui/input";
 
 export default function Profile() {
     const [preview, setPreview] = useState(null);

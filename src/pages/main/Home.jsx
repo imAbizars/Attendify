@@ -3,10 +3,8 @@ import {useAbsen} from "@/hooks/absen/useAbsen";
 import { MapContainer, TileLayer, Marker, Circle,Polyline } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
-import icon from "leaflet/dist/images/marker-icon.png";
-import iconShadow from "leaflet/dist/images/marker-shadow.png";
 import umamusume from "@/assets/images/umamusume.gif";
-import { Button } from "../../ui/button"; 
+import { Button } from "@/components/ui/button"; 
 import { Alert,AlertDescription,AlertTitle} from "@/components/ui/alert";
 import Lottie from "lottie-react";
 import SuccesAnimation from "@/assets/animation/Successfull Animation.json";
@@ -15,8 +13,8 @@ import { AlertCircleIcon,Loader2,AlertTriangle} from "lucide-react";
 import {useGeolocation} from "@/lib/utilites/UseGeolocation";
 import { Card } from "@/components/ui/card";
 import { useWaktu } from "@/lib/utilites/useWaktu";
-import { useRouting } from "../../../hooks/routingMap/useRouting";
-import AnimatedPolyline from "../../ui/AnimatedPolyline";
+import { useRouting } from "@/hooks/routingMap/useRouting";
+import AnimatedPolyline from "@/components/ui/AnimatedPolyline";
 
 
 export default function Home() {
@@ -34,7 +32,6 @@ export default function Home() {
     clearMessage,
     isSuccess,
     terlambat, 
-    clearTerlambat,
     info,
     jamMasuk,
     jamKeluar,
@@ -195,9 +192,11 @@ export default function Home() {
 
         {message && (
           <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-            <Alert className="w-60 h-80 flex items-center justify-center bg-white">
-              <AlertDescription className="flex flex-col items-center justify-center text-xl">
+            <Alert className="w-70 h-70 flex items-center justify-center bg-white py-4">
+              <AlertDescription className="flex flex-col items-center justify-center ">
+                <h1 className="text-xl">
                 {message}
+                </h1>
                 {isSuccess?(
                     <Lottie
                       animationData={SuccesAnimation}
@@ -212,6 +211,7 @@ export default function Home() {
                     />
                   )
                 }
+                
               </AlertDescription>
             </Alert>  
           </div>
