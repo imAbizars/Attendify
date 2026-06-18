@@ -10,12 +10,14 @@ import {Textarea} from "@/components/ui/textarea";
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
 import { CalendarIcon, ChevronDownIcon} from "lucide-react";
 import DatePicker from "@/components/ui/date-picker";
-
+import {buatIzin} from "@/hooks/izin/useIzin";
 export default function Izin() {
     const [dariTanggal, setDariTanggal] = useState(null);
     const [sampaiTanggal, setSampaiTanggal] = useState(null);
+    const [keterangan, setKeterangan] = useState("");
     const [openDari, setOpenDari] = useState(false);
     const [openSampai, setOpenSampai] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const formatDate = (date) => {
         if (!date) return "Pilih Tanggal";
@@ -23,6 +25,38 @@ export default function Izin() {
             day: "numeric",
             month: "long",
             year: "numeric"
+        });
+    };
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        if (!dariTanggal || !sampaiTanggal || !keterangan) {
+            alert("Semua field harus diisi!");
+            return;
+        }
+
+        try {
+            setLoading(true);
+            await buatIzin({
+                tanggalIzin: dariTanggal.toISOString(),
+                selesaiIzin: sampaiTanggal.toISOString(),
+                keterangan,
+                
+            });
+            alert("Izin berhasil diajukan!");
+            // Reset form
+            setDariTanggal(null);
+            setSampaiTanggal(null);
+            setKeterangan("");
+        } catch (error) {
+            alert("Gagal mengajukan izin: " + error.message);
+        } finally {
+            setLoading(false);
+        }
+        console.log({
+            tanggalIzin: dariTanggal.toISOString(),
+            selesaiIzin: sampaiTanggal.toISOString(),
+            keterangan,
         });
     };
 
@@ -33,7 +67,7 @@ export default function Izin() {
                     <CardTitle className="text-center">Pengajuan Izin Kerja</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <form className="flex flex-col gap-3" action="">
+                    <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
 
                         {/* Dari Tanggal */}
                         <p>Dari Tanggal :</p>
@@ -80,9 +114,14 @@ export default function Izin() {
                                 />
                             </PopoverContent>
                         </Popover>
-
-                        <Textarea placeholder="keterangan izin" />
-                        <Button>Ajukan Izin</Button>
+                        <Textarea
+                            placeholder="keterangan izin"
+                            value={keterangan}
+                            onChange={(e) => setKeterangan(e.target.value)}
+                        />
+                        <Button type="submit" disabled={loading}>
+                            {loading ? "Mengajukan..." : "Ajukan Izin"}
+                        </Button>
                     </form>
                 </CardContent>
             </Card>

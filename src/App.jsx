@@ -8,7 +8,7 @@ import { QueryClientProvider,QueryClient} from "@tanstack/react-query";
 import Dashboard from "./pages/dasboard/Dashboard";
 import MainLayout from "./pages/main/MainLayout";
 import DataUser from "./pages/dasboard/DataUser";
-import Riwayat from "./pages/dasboard/Riwayat";
+import DataAbsensi from "./pages/dasboard/DataAbsensi";
 import DashboardLayout from "./pages/dasboard/DashboardLayout";
 import Login from "./pages/main/Login";
 import ProtectedRoute from "./lib/protected/ProtectedRoute"
@@ -41,7 +41,7 @@ export default function App(){
                   }>
             <Route index element={<Dashboard/>} /> 
             <Route path="pegawai" element={<DataUser />} />
-            <Route path="riwayat" element={<Riwayat />} />  
+            <Route path="absensi" element={<DataAbsensi/>} />  
           </Route>
         </Routes>
       </Router>

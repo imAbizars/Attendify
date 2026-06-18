@@ -50,10 +50,11 @@ export default function Dashboard(){
     const { waktu } = useWaktu();
 
     const {data : jumlahUser} = getJumlahUser();
-    useEffect(() => {
-    refetch();
-    }, [selectedMonth]);
-    
+
+    useEffect(()=>{
+        refetch();
+    },[selectedMonth]);
+
     const navigate = useNavigate();
     const chartConfig = {
     hadir: { 
@@ -68,7 +69,7 @@ export default function Dashboard(){
     }
     const aksesCepat = [
         {path:"/dashboard/pegawai",label:"Data Pegawai",icon:(<User2 style={{ width: 20, height: 20 }} className="shrink-0" />)},
-        {path:"/dashboard/riwayat",label:"Data Absensi",icon:(<Clock style={{ width: 20, height: 20 }} className="shrink-0" />)},
+        {path:"/dashboard/absensi",label:"Data Absensi",icon:(<Clock style={{ width: 20, height: 20 }} className="shrink-0" />)},
         {path:"/dashboard/laporan",label:"Data Laporan",icon:(<BookMarked style={{ width: 20, height: 20 }} className="shrink-0" />)},
     ]
     
@@ -76,11 +77,11 @@ export default function Dashboard(){
          <div className="relative  h-full">
             <div className="flex flex-col gap-6">
                 {/* greeting timer */}
-                <div className="flex justify-between">
+                <div className="flex justify-between items-center">
                     <h1 className="text-3xl ">
                         Selamat Datang Kembali,Admin.
                     </h1>
-                    <h1 className="p-1 text-2xl rounded-md">
+                    <h1 className="p-1 text-3xl rounded-md">
                         {waktu.toLocaleDateString("id-ID", { 
                             timeZone: "Asia/Jakarta",
                             weekday: "long",
@@ -98,11 +99,11 @@ export default function Dashboard(){
                 {/* akses cepat */}
                 <div className="flex flex-col gap-4">
                     <h1 className="flex gap-2 items-center text-2xl"><Rocket/>Akses Cepat</h1>
-                    <div className="flex gap-3 items-center">
+                    <div className="flex gap-3 items-center ">
                         {aksesCepat.map((akses)=>(
                             <Button 
                             onClick={()=>{navigate(akses.path)}}
-                            className="h-20 w-40 text-lg">
+                            className="h-20 w-40 text-lg bg-chart-2">
                                 {akses.icon}
                                 {akses.label}
                             </Button>
@@ -169,7 +170,7 @@ export default function Dashboard(){
                             <CardHeader>
                                 <div className="flex items-center justify-between">
                                     <div>
-                                        <CardTitle>Statistik Absen</CardTitle>
+                                        <CardTitle>Statistik Absen Bulanan</CardTitle>
                                         <CardDescription>Menampilkan Total Absen Bulan Ini</CardDescription>
                                     </div>
                                     <Popover>

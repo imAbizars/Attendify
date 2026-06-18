@@ -5,13 +5,13 @@ export default function Aside() {
   const menus = [
     { path: "/dashboard", label: "Dashboard" },
     { path: "/dashboard/pegawai", label: "Data Pegawai" },
-    { path: "/dashboard/riwayat", label: "Riwayat Absensi" },
+    { path: "/dashboard/absensi", label: "Data Absensi" },
     { path: "/dashboard/laporan", label: "Laporan" },
   ];
 
   return (
     <aside className="w-56 min-h-screen border-r-4  bg-main">
-      <h2 className="border border-black font-bold text-xl py-6 px-4 border-b-3">Attendify</h2>
+      <h2 className="border border-black font-bold text-xl py-6 px-4 border-b-3">Milttendify</h2>
 
       <ul >
         {menus.map((menu) => (

@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { axiosInstance } from "@/lib/axios/axios";
 import { useState } from "react";
 
-const timeRefetch = 1000 * 60 * 60 * 24 * 2;
+
 
 export const useStatistikAbsen = () => {
     const [selectedMonth,setSelectedMonth] = useState(()=>{
@@ -24,7 +24,7 @@ export const useStatistikAbsen = () => {
             
             return res.data.data;
         },
-        staleTime: timeRefetch,
+        staleTime: 1000 * 60 * 30,
         refetchIntervalInBackground: false,
     });
 
