@@ -10,18 +10,36 @@ import {
     DialogFooter,
 } from "@/components/ui/dialog";
 import { Card } from "@/components/ui/card";
-import {PenBox,FileDown,KeyRound} from "lucide-react"
+import {PenBox,FileDown,KeyRound,CircleCheck,XCircle} from "lucide-react"
 import { Input } from "../../components/ui/input";
-
+import { axiosInstance } from "@/lib/axios/axios";
+import {Alert,AlertDescription} from "@/components/ui/alert";
 export default function Profile() {
     const [preview, setPreview] = useState(null);
     const [selectedFile, setSelectedFile] = useState(null);
     const [openModalPhoto, setOpenModalPhoto] = useState(false);
     const [openModalPassword,setOpenModalPassword] = useState(false);
+    const [openModalEmail,setOpenModalEmail] = useState(false);
     const inputRef = useRef(null);
+    const [oldPassword,setOldPassword] = useState("")
+    const [newPassword, setNewPassword] = useState("");
+    const [konfirmasiPassword,setkonfirmasiPassword] = useState("");
+    const [emailUser,setEmailUser] = useState("");
+    const [loading,setLoading] = useState(false);
+    const [alert, setAlert] = useState(null);
+    const [isLeaving, setIsLeaving] = useState(false);
+    const showAlert = (message, type = "success") => {
+        setIsLeaving(false);
+        setAlert({ message, type });
+
+        setTimeout(() => {
+            setIsLeaving(true);
+            setTimeout(() => setAlert(null), 300);
+        }, 2000);
+    };
     const { 
         uploadPhoto,
-        loading, 
+        loading :loadUser, 
         fetchInfoUser,
         photoProfile,
         fetchStatistikAbsen,
@@ -48,6 +66,10 @@ export default function Profile() {
     const handleOpenModalPw = () =>{
         setOpenModalPassword(true);
     }
+    const handleOpenModalEmail = ()=>{
+        setOpenModalEmail(true)    
+    }
+
     const handlePilihFile = (e) => {
         const file = e.target.files[0];
         if (!file) return;
@@ -75,7 +97,44 @@ export default function Profile() {
         setSelectedFile(null);
         inputRef.current.value = ""; 
     };
-
+    // handle reset pw
+    const matchingPass = newPassword !== "" && konfirmasiPassword !== "" && newPassword == konfirmasiPassword;
+    const handleResetPw = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        try {
+            await axiosInstance.post("/settings/gantiPassword", {
+                oldPassword,
+                newPassword,
+            });
+            showAlert("Password Diupdate", "success");
+            setOldPassword("");
+            setNewPassword("");
+            setkonfirmasiPassword("");
+        } catch (error) {
+            showAlert(error?.response?.data?.message || "Gagal update password", "error");
+        } finally {
+            setLoading(false);
+        }
+    };
+    
+    // handle reset email
+    const handleResetEmail = async(e)=>{
+        e.preventDefault();
+        setLoading(true);
+        try{
+            await axiosInstance.patch("/user/gantiEmail",{
+                emailUser
+            });
+            fetchInfoUser();
+            setEmailUser("");
+            showAlert("Email Diupdate","success");
+        }catch(error){
+            showAlert(error?.response?.data?.message || "Gagal update email", "error");
+        }finally{
+            setLoading(false);
+        }
+    }
     return (
         <div className="flex flex-col items-center min-h-screen p-5 pb-8">
             <div className="w-full flex flex-col items-center gap-4 pt-8 p-4">
@@ -101,14 +160,14 @@ export default function Profile() {
                 <div className="flex flex-col items-center gap-2">
                     <div className="text-2xl font-bold">{nama}</div>
                     <span
-                        className="h-2 bg-main rounded-lg block border-2"
-                        style={{ width: `${nama.length * 14}px` }}
+                        className="h-2 w-15 bg-main rounded-lg block border-2"
+                        
                     />
                 </div>
-
                 <span className="text-xs px-3 py-1 bg-main text-white rounded-full font-medium shadow-sm border-2 border-black">
                         🏆 {infoRankUser}
                 </span>
+                
                 <Card className="w-full p-4 bg-main">
                     <div className="flex flex-col gap-2">
                         <h1 className="text-md ">Ringkasan Kehadiran Kamu</h1>
@@ -123,10 +182,8 @@ export default function Profile() {
                                 <span>: {value}</span>
                             </div>
                         ))}
-                        <Button className="flex bg-background mt-2 text-xs"> <FileDown/> Ekspor PDF</Button>
                     </div>
-                </Card>
-                <Card className="w-full p-4 bg-main">
+                    <span className="h-2 w-full mt-5 mb-5 bg-white rounded-lg block border-2"/>
                     <h1 className="text-md">Data Pribadi</h1>
                     <div className="flex flex-col gap-2">
                         <div className="flex text-xs items-center justify-between ">
@@ -134,7 +191,11 @@ export default function Profile() {
                                 <span className="w-25 shrink-0">Email</span>
                                 <span className="truncate">: {email}</span>
                             </div>
-                            <Button className="w-6 h-9 shrink-0"><PenBox/></Button>
+                            <Button
+                            onClick={handleOpenModalEmail}
+                            className="w-6 h-9 shrink-0"
+                            ><PenBox/>
+                            </Button>
                         </div>
                         <div className="flex text-xs items-center justify-between">
                             <div className="flex items-center min-w-0 flex-1">
@@ -152,6 +213,7 @@ export default function Profile() {
                         </Button>
                     </div>
                 </Card>
+
             </div>
 
             {/* modal password */}
@@ -160,19 +222,64 @@ export default function Profile() {
                     <DialogHeader>
                         <DialogTitle>Masukkan Password Baru</DialogTitle>
                     </DialogHeader>
-                    <Input
-                    placeholder="Password Baru"
-                    type="password"
-                    />
-                    <Input
-                    placeholder="Konfirmasi Password Baru"
-                    type="password"
-                    />
-                    <Button>
-                        Ganti Password
-                    </Button>
+                    <form className="flex flex-col gap-2" onSubmit={handleResetPw}>
+                        <Input
+                            type="password"
+                            value={oldPassword}
+                            onChange={(e) => setOldPassword(e.target.value)}
+                            placeholder="Password lama"
+                        />
+                        <Input
+                            type="password"
+                            value={newPassword}
+                            onChange={(e) => setNewPassword(e.target.value)}
+                            placeholder="Password baru"
+                        />
+                        <Input
+                            type="password"
+                            value={konfirmasiPassword}
+                            onChange={(e) => setkonfirmasiPassword(e.target.value)}
+                            placeholder="Konfirmasi Password"
+                        />
+                        {konfirmasiPassword && !matchingPass && (
+                            <p className="text-red-500 text-sm">Password tidak cocok</p>
+                        )}
+                        <Button type="submit" disabled={loading || !matchingPass}>
+                            {loading ? (
+                                <div className="flex items-center gap-2">
+                                    <Loader2 className="animate-spin w-4 h-4" />
+                                </div>
+                            ) : (
+                                "Reset"
+                            )}
+                        </Button>
+                    </form>
                 </DialogContent>
             </Dialog>
+            {alert && (
+                <div className="fixed inset-0 flex w-60 h-15 top-10 left-1/2 -translate-x-1/2 z-[999] pointer-events-none">
+                    <Alert
+                        className={`flex text-center justify-center items-center gap-2 shadow-xl ${isLeaving ? "animate-slideUp" : "animate-slideDown"} ${
+                            alert.type === "error"
+                                ? "bg-white border-red-500"
+                                : "bg-white border-green-500"
+                        }`}
+                    >
+                        {alert.type === "error" ? (
+                            <XCircle strokeWidth={3.5} style={{color:"red"}} />
+                        ) : (
+                            <CircleCheck strokeWidth={3.5} className="text-green-500" />
+                        )}
+                        <AlertDescription
+                            className={`font-bold text-base ${
+                                alert.type === "error" ? "text-red-500" : "text-black"
+                            }`}
+                        >
+                            {alert.message}
+                        </AlertDescription>
+                    </Alert>
+                </div>
+            )}
 
             {/* Modal photo Preview */}
             <Dialog open={openModalPhoto} onOpenChange={setOpenModalPhoto}>
@@ -199,15 +306,15 @@ export default function Profile() {
                         <Button
                             variant="outline"
                             onClick={handleBatal}
-                            disabled={loading}
+                            disabled={loadUser}
                         >
                             Batal
                         </Button>
                         <Button
                             onClick={handleSimpan}
-                            disabled={loading}
-                        >
-                            {loading ? (
+                            disabled={loadUser}
+                            >
+                            {loadUser ? (
                                 <div className="flex items-center gap-2">
                                     <Loader2 className="animate-spin w-4 h-4"/>
                                     Menyimpan...
@@ -217,6 +324,62 @@ export default function Profile() {
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
+
+            {/* modal ganti email */}
+            <Dialog open={openModalEmail} onOpenChange={setOpenModalEmail} >
+                <DialogContent className="px-15 py-13">
+                    <DialogHeader>
+                        <DialogTitle>Masukkan Email Valid</DialogTitle>
+                    </DialogHeader>
+                    <form 
+                    onSubmit={handleResetEmail}
+                    className="flex flex-col gap-2">
+                        <Input
+                        type="email"
+                        value={emailUser}
+                        onChange={(e)=>setEmailUser(e.target.value)}
+                        placeholder="Masukkan Email Baru"
+                        />
+                        <Button
+                        type="submit"
+                        disabled={loading}
+                        >
+                        {loading ? (
+                            <div className="flex items-center gap-2">
+                                <Loader2 className="animate-spin w-4 h-4" />
+                            </div>
+                        ) : (
+                            "Simpan"
+                        )}
+                        </Button>
+                    </form>
+                </DialogContent>
+            </Dialog>
+            {alert && (
+                <div className="fixed inset-0 flex w-60 h-15 top-10 left-1/2 -translate-x-1/2 z-[999] pointer-events-none">
+                    <Alert
+                        className={`flex text-center justify-center items-center gap-2 shadow-xl ${isLeaving ? "animate-slideUp" : "animate-slideDown"} ${
+                            alert.type === "error"
+                                ? "bg-white border-red-500"
+                                : "bg-white border-green-500"
+                        }`}
+                    >
+                        {alert.type === "error" ? (
+                            <XCircle strokeWidth={3.5} style={{color:"red"}} />
+                        ) : (
+                            <CircleCheck strokeWidth={3.5} className="text-green-500" />
+                        )}
+                        <AlertDescription
+                            className={`font-bold text-base ${
+                                alert.type === "error" ? "text-red-500" : "text-black"
+                            }`}
+                        >
+                            {alert.message}
+                        </AlertDescription>
+                    </Alert>
+                </div>
+            )}
+
         </div>
     );
 }

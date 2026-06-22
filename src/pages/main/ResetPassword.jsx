@@ -24,7 +24,7 @@ export default function ResetPassword(){
         e.preventDefault();
         setLoading(true);
         try {
-            await axiosInstance.post("/settings/resetPassword", { token, password });
+            await axiosInstance.post("/settings/lupaPassword", { token, password });
             setMessage("Password berhasil direset, silakan");
             setSuccess(true);
             setPassword("");

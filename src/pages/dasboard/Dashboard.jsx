@@ -244,7 +244,10 @@ export default function Dashboard(){
                                 <div className="flex w-full items-start gap-2 text-sm">
                                         <div className="grid gap-2">
                                             <div className="flex items-center gap-2 leading-none font-medium">
-                                            Total Pegawai = {jumlahUser}
+                                                <span className="w-3 h-3 bg-chart-1 border "/>
+                                                <p>Hadir</p>
+                                                <span className="w-3 h-3 bg-chart-2 border "/>
+                                                <p>Tidak Hadir</p>
                                             <div className="flex items-center gap-2 leading-none">
                                         </div>
                                 </div>

@@ -211,7 +211,6 @@ export default function Home() {
                     />
                   )
                 }
-                
               </AlertDescription>
             </Alert>  
           </div>
@@ -237,22 +236,24 @@ export default function Home() {
               {info}
             </h4>
           )}
-          <Button
-            className="w-full text-white"
-            size="lg"
-            disabled={statusAbsen.sudahMasuk || loading || !location}
-            onClick={() => handleAbsenMasuk(location.lat, location.lng)}
-          >
-            {loading ? <Loader2 className="animate-spin" /> : statusAbsen.sudahMasuk ? "Sudah Absen Masuk " : "ABSEN MASUK"}
-          </Button>
-          <Button
-            className="w-full text-white"
-            size="lg"
-            disabled={!statusAbsen.sudahMasuk || statusAbsen.sudahKeluar || loading}
-            onClick={handleAbsenKeluar}
-          >
-            {loading ? <Loader2 className="animate-spin" /> : statusAbsen.sudahKeluar ? "Sudah Absen Keluar " : "ABSEN KELUAR"}
-          </Button>
+          <div className="flex gap-10 h-15">
+            <Button
+              className="w-full text-white h-full"
+              size="lg"
+              disabled={statusAbsen.sudahMasuk || loading || !location}
+              onClick={() => handleAbsenMasuk(location.lat, location.lng)}
+            >
+              {loading ? <Loader2 className="animate-spin" /> : statusAbsen.sudahMasuk ? "Sudah Absen" : "ABSEN MASUK"}
+            </Button>
+            <Button
+              className="w-full text-white h-full"
+              size="lg"
+              disabled={!statusAbsen.sudahMasuk || statusAbsen.sudahKeluar || loading}
+              onClick={handleAbsenKeluar}
+            >
+              {loading ? <Loader2 className="animate-spin" /> : statusAbsen.sudahKeluar ? "Sudah Absen" : "ABSEN KELUAR"}
+            </Button>
+          </div>
         </div>
     </div>
   );
