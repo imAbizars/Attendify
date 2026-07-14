@@ -236,7 +236,7 @@ export default function Home() {
               {info}
             </h4>
           )}
-          <div className="flex gap-5 h-15">
+          <div className="flex gap-2 h-15">
             <Button
               className="w-full text-white h-full"
               size="lg"
