@@ -151,9 +151,9 @@ export default function Izin() {
                     </form>
                 </CardContent>
             </Card>
-            <div className="flex flex-col shadow-shadow gap-5 w-full border-3 border-black p-4 rounded-xl">
-                <h2>Status Pengajuan Izin Kerja Kamu</h2>
-                <Table className="table-fixed w-full">
+            <div className="flex flex-col shadow-shadow gap-5 w-full border-3 border-black p-3 rounded-xl">
+                <h2 className="text-center">Status Pengajuan Izin Kerja</h2>
+                <Table className="table-fixed w-full rounded-xl">
                     <TableHeader>
                         <TableRow>
                             <TableHead className="w-[35%] px-2 text-xs sm:text-sm sm:px-4">Tanggal Izin</TableHead>

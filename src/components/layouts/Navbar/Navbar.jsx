@@ -22,8 +22,7 @@ export default function Navbar(){
                     </Button>
                 </div>
             </nav>
-            <div className={`fixed top-0 left-0 h-full w-50 pt-10 z-40 bg-main border-r-3 transform transition-transform duration-300 ease-in-out ${isopen?"translate-x-0":"-translate-x-full"}`}>
-                <div className="pt-10">
+            <div className={`fixed top-0 left-0 h-full w-50 pt-25 z-40 bg-main border-r-3 transform transition-transform duration-300 ease-in-out ${isopen?"translate-x-0":"-translate-x-full"}`}>
                     <ul className="space-y-5 text-md">
                         <NavLink
                         to="/home" 
@@ -55,7 +54,6 @@ export default function Navbar(){
                         ><BedSingle className="mr-2"/>Izin</NavLink>
                     </ul>
                 </div>
-            </div>
         </>
     );
 }
