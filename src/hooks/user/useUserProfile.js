@@ -1,4 +1,4 @@
-import { useState, useTransition } from "react";
+import { useState} from "react";
 import { axiosInstance } from "@/lib/axios/axios";
 
 export const useProfile = () => {

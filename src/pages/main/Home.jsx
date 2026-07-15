@@ -76,7 +76,7 @@ export default function Home() {
     <div className="flex flex-col gap-4 p-4 pt-10  min-h-screen w-full">
         <div className="flex flex-col gap-2">
           <h1 className="text-3xl">Selamat {getGreet(waktu.getHours())} {nama}</h1>
-          <h1 className="text-5xl">{waktu.toLocaleTimeString('id-ID',{
+          <h1 className="text-4xl">{waktu.toLocaleTimeString('id-ID',{
             timeZone:"Asia/Jakarta",
             hour: "2-digit",
             minute: "2-digit",
@@ -101,12 +101,12 @@ export default function Home() {
         {location && (
           <>
           <h1 className="text-xl">Lokasi Kamu Berada : </h1>
-            <Card>
+            <Card className="mx-4">
               <div className="flex justify-center">
                 <MapContainer
                   center={[location.lat, location.lng]}
                   zoom={50}
-                  style={{ height: "300px", width: "90%",zIndex:1 }}
+                  style={{ height: "250px", width: "85%",zIndex:1 }}
                 >
                   <TileLayer
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -169,7 +169,7 @@ export default function Home() {
           <div className="mb-2 space-y-1 text-md">
             {jarakKeKantor !== null && (
                 dalamJangkauan ? (
-                    <div className="flex justify-center gap-2 p-2 border-2 border-black rounded-md mt-2">
+                    <div className="flex justify-center gap-2 p-2 border-2 border-black rounded-md mt-2 mx-4">
                         <AlertCircleIcon size={30}/>
                         <p>
                             Lokasi kamu berada {jarakKeKantor} meter dari jarak tujuan

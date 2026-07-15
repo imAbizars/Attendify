@@ -8,9 +8,14 @@ import {
 import {Button} from "@/components/ui/button";
 import {Textarea} from "@/components/ui/textarea";
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
 import { CalendarIcon, ChevronDownIcon} from "lucide-react";
 import DatePicker from "@/components/ui/date-picker";
 import {buatIzin} from "@/hooks/izin/useIzin";
+import {useIzinSaya} from "@/hooks/izin/getIzinUser";
+import { useQueryClient } from "@tanstack/react-query";
+
 export default function Izin() {
     const [dariTanggal, setDariTanggal] = useState(null);
     const [sampaiTanggal, setSampaiTanggal] = useState(null);
@@ -18,6 +23,10 @@ export default function Izin() {
     const [openDari, setOpenDari] = useState(false);
     const [openSampai, setOpenSampai] = useState(false);
     const [loading, setLoading] = useState(false);
+
+    // destructure error juga, karena dipakai di JSX bawah
+    const { data: izinSaya, isError, isLoading, error } = useIzinSaya();
+    const queryClient = useQueryClient();
 
     const formatDate = (date) => {
         if (!date) return "Pilih Tanggal";
@@ -27,11 +36,17 @@ export default function Izin() {
             year: "numeric"
         });
     };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (!dariTanggal || !sampaiTanggal || !keterangan) {
             alert("Semua field harus diisi!");
+            return;
+        }
+
+        if (sampaiTanggal < dariTanggal) {
+            alert("Tanggal selesai tidak boleh sebelum tanggal mulai!");
             return;
         }
 
@@ -41,9 +56,13 @@ export default function Izin() {
                 tanggalIzin: dariTanggal.toISOString(),
                 selesaiIzin: sampaiTanggal.toISOString(),
                 keterangan,
-                
             });
+
             alert("Izin berhasil diajukan!");
+
+            // refresh tabel otomatis setelah submit sukses
+            queryClient.invalidateQueries({ queryKey: ["fetch.izin"] });
+
             // Reset form
             setDariTanggal(null);
             setSampaiTanggal(null);
@@ -53,15 +72,21 @@ export default function Izin() {
         } finally {
             setLoading(false);
         }
-        console.log({
-            tanggalIzin: dariTanggal.toISOString(),
-            selesaiIzin: sampaiTanggal.toISOString(),
-            keterangan,
-        });
     };
-
+    const getStatusStyle = (status) => {
+        switch (status?.toLowerCase()) {
+            case "diterima":
+                return "bg-green-100 text-green-700 border border-green-500";
+            case "DalamProses":
+                return "bg-orange-100 text-orange-700 border border-orange-500";
+            case "ditolak":
+                return "bg-red-100 text-red-700 border border-red-500";
+            default:
+                return "bg-orange-100 text-orange-700 border border-orange-500";
+        }
+    };
     return (
-        <div className="flex px-10 py-10 border border-black">
+        <div className="flex flex-col gap-10 px-10 py-10">
             <Card className="flex flex-col w-full">
                 <CardHeader>
                     <CardTitle className="text-center">Pengajuan Izin Kerja</CardTitle>
@@ -100,10 +125,10 @@ export default function Izin() {
                                     <ChevronDownIcon className="ml-2" />
                                 </Button>
                             </PopoverTrigger>
-                            <PopoverContent 
-                            className="w-auto p-0"
-                            side="bottom"
-                            avoidCollisions={false}
+                            <PopoverContent
+                                className="w-auto p-0"
+                                side="bottom"
+                                avoidCollisions={false}
                             >
                                 <DatePicker
                                     value={sampaiTanggal}
@@ -114,6 +139,7 @@ export default function Izin() {
                                 />
                             </PopoverContent>
                         </Popover>
+
                         <Textarea
                             placeholder="keterangan izin"
                             value={keterangan}
@@ -125,6 +151,58 @@ export default function Izin() {
                     </form>
                 </CardContent>
             </Card>
+            <div className="flex flex-col shadow-shadow gap-5 w-full border-3 border-black p-4 rounded-xl">
+                <h2>Status Pengajuan Izin Kerja Kamu</h2>
+                <Table className="table-fixed w-full">
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead className="w-[35%] px-2 text-xs sm:text-sm sm:px-4">Tanggal Izin</TableHead>
+                            <TableHead className="w-[29%] px-2 text-xs sm:text-sm sm:px-4">Keterangan</TableHead>
+                            <TableHead className="w-[36%] px-2 text-xs sm:text-sm sm:px-4">Status</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {isLoading && (
+                            <TableRow>
+                                <TableCell colSpan={3}>Memuat data...</TableCell>
+                            </TableRow>
+                        )}
+
+                        {isError && (
+                            <TableRow>
+                                <TableCell colSpan={3}>
+                                    Gagal memuat data: {error?.message}
+                                </TableCell>
+                            </TableRow>
+                        )}
+
+                        {!isLoading && !isError && izinSaya?.length === 0 && (
+                            <TableRow>
+                                <TableCell colSpan={3}>Belum ada pengajuan izin</TableCell>
+                            </TableRow>
+                        )}
+
+                        {izinSaya?.map((izin) => (
+                            <TableRow key={izin.id}>
+                                <TableCell className="break-words px-2 text-xs sm:text-sm sm:px-4">
+                                    <div className="flex flex-col">
+                                        <span>{formatDate(new Date(izin.tanggalIzin))} -</span>
+                                        <span>{formatDate(new Date(izin.selesaiIzin))}</span>
+                                    </div>
+                                </TableCell>
+                                <TableCell className="break-words px-2 text-xs sm:text-sm sm:px-4">
+                                    {izin.keterangan}
+                                </TableCell>
+                                <TableCell className="break-words px-2 text-xs sm:text-sm sm:px-4">
+                                    <Badge className={`inline-block max-w-full break-words px-1 py-1 rounded-full text-xs font-medium ${getStatusStyle(izin.status)}`}>
+                                        {izin.status}
+                                    </Badge>
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </div>
         </div>
     );
 }

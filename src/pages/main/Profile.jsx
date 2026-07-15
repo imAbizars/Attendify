@@ -10,7 +10,7 @@ import {
     DialogFooter,
 } from "@/components/ui/dialog";
 import { Card } from "@/components/ui/card";
-import {PenBox,FileDown,KeyRound,CircleCheck,XCircle} from "lucide-react"
+import {PenBox,KeyRound,CircleCheck,XCircle,LogOut} from "lucide-react"
 import { Input } from "../../components/ui/input";
 import { axiosInstance } from "@/lib/axios/axios";
 import {Alert,AlertDescription} from "@/components/ui/alert";
@@ -136,8 +136,13 @@ export default function Profile() {
         }
     }
     return (
-        <div className="flex flex-col items-center min-h-screen p-5 pb-8">
-            <div className="w-full flex flex-col items-center gap-4 pt-8 p-4">
+        <div className="flex flex-col items-center min-h-screen px-4 pb-8">
+            <div className="w-full flex flex-col items-center gap-4 p-4">
+                <div className="flex w-full justify-end">
+                    <Button size="sm" className="[&_svg]:size-[25px]">
+                        <LogOut/>
+                    </Button>
+                </div>
                 <div className="relative w-40 h-40">
                     <div className="w-40 h-40 rounded-full overflow-hidden border-2 border-black">
                         {photoProfile ? (
@@ -157,6 +162,7 @@ export default function Profile() {
                         <PenIcon className="w-4 h-4"/>
                     </Button>
                 </div>
+
                 <div className="flex flex-col items-center gap-2">
                     <div className="text-2xl font-bold">{nama}</div>
                     <span
