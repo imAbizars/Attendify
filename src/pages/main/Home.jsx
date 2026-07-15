@@ -236,10 +236,10 @@ export default function Home() {
               {info}
             </h4>
           )}
-          <div className="flex gap-2 h-15">
+          <div className="flex gap-2 h-15 mx-4">
             <Button
               className="w-full text-white h-full"
-              size="lg"
+              size="md"
               disabled={statusAbsen.sudahMasuk || loading || !location}
               onClick={() => handleAbsenMasuk(location.lat, location.lng)}
             >
@@ -247,7 +247,7 @@ export default function Home() {
             </Button>
             <Button
               className="w-full text-white h-full"
-              size="lg"
+              size="md"
               disabled={!statusAbsen.sudahMasuk || statusAbsen.sudahKeluar || loading}
               onClick={handleAbsenKeluar}
             >
