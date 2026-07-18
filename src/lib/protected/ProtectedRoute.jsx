@@ -8,7 +8,7 @@ export default function ProtectedRoute({ children, allowedRole }) {
     try {
         const payload = JSON.parse(atob(token.split(".")[1]));
 
-        if (allowedRole && payload.role !== allowedRole) {
+        if (allowedRole && payload.jabatan !== allowedRole) {
             return <Navigate to="/home" />;
         }
 

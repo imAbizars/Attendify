@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useProfile } from "@/hooks/user/useUserProfile";
+import { useNavigate } from "react-router-dom";
 import { Loader2, PenIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,6 +16,7 @@ import { Input } from "../../components/ui/input";
 import { axiosInstance } from "@/lib/axios/axios";
 import {Alert,AlertDescription} from "@/components/ui/alert";
 export default function Profile() {
+    const navigate = useNavigate()
     const [preview, setPreview] = useState(null);
     const [selectedFile, setSelectedFile] = useState(null);
     const [openModalPhoto, setOpenModalPhoto] = useState(false);
@@ -135,11 +137,19 @@ export default function Profile() {
             setLoading(false);
         }
     }
+    // handle logout
+    const handleLogout = ()=>{
+        localStorage.clear();
+        navigate("/")
+    }
     return (
         <div className="flex flex-col items-center min-h-screen px-4 pb-8">
             <div className="w-full flex flex-col items-center gap-4 p-4">
                 <div className="flex w-full justify-end">
-                    <Button size="sm" className="[&_svg]:size-[25px]">
+                    <Button
+                    onClick={handleLogout} 
+                    size="sm" 
+                    className="[&_svg]:size-[25px]">
                         <LogOut/>
                     </Button>
                 </div>

@@ -1,12 +1,13 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-
+import {BarChart4,UserRoundPen,BookOpenCheck,LocationEdit, BedSingle} from "lucide-react"
 export default function Aside() {
   const menus = [
-    { path: "/dashboard", label: "Dashboard" },
-    { path: "/dashboard/pegawai", label: "Data Pegawai" },
-    { path: "/dashboard/absensi", label: "Data Absensi" },
-    { path: "/dashboard/laporan", label: "Laporan" },
+    { path: "/dashboard", label: "Dashboard",icon:<BarChart4/> },
+    { path: "/dashboard/pegawai", label: "Kelola Data Pegawai",icon:<UserRoundPen/>},
+    { path: "/dashboard/absensi", label: "Kelola Rekap Data Absensi",icon:<BookOpenCheck/>},
+    { path: "/dashboard/izin", label: "Kelola Data Izin",icon:<BedSingle/> },
+    { path: "/dashboard/lokasi", label: "Kelola Data Lokasi",icon:<LocationEdit/> },
   ];
 
   return (
@@ -20,14 +21,17 @@ export default function Aside() {
               to={menu.path}
               end={menu.path === "/dashboard"} 
               className={({ isActive }) =>
-                `block p-6 transition text-lg ${
+                `block p-6 transition text-md ${
                   isActive
                     ? " bg-main-foreground font-semibold"
                     : "hover:bg-main-foreground "
                 }`
               }
             >
-              {menu.label}
+              <span className="flex gap-2 items-center">
+                {menu.icon}
+                {menu.label}
+              </span>
             </NavLink>
           </li>
         ))}

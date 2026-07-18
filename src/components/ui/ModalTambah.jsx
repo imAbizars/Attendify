@@ -26,7 +26,7 @@ export default function ModalTambah({ onClose,onSuccess,selectedUser}) {
     password: selectedUser?.password||"",
     phonenumber: selectedUser?.phonenumber||"",
     address: selectedUser?.address||"",
-    role: selectedUser?.role||"",
+    jabatan: selectedUser?.jabatan||"",
   });
   const resetForm = ()=>{
      setForm({
@@ -35,7 +35,7 @@ export default function ModalTambah({ onClose,onSuccess,selectedUser}) {
           password:"",
           phonenumber:"",
           address:"",
-          role:""
+          jabatan:""
      })
   }
   //createuser
@@ -58,7 +58,7 @@ export default function ModalTambah({ onClose,onSuccess,selectedUser}) {
   const handleSelectChange = (value)=>{
      setForm({
           ...form,
-          role : value,
+          jabatan : value,
      })
   }
   const handleSubmit = () => {
@@ -101,14 +101,18 @@ export default function ModalTambah({ onClose,onSuccess,selectedUser}) {
             placeholder="Alamat"
             onChange={handleChange}
           />
-          <Select defaultValue={form.role} onValueChange={handleSelectChange}>
+          <Select defaultValue={form.jabatan} onValueChange={handleSelectChange}>
                <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Select Role" />
+                    <SelectValue placeholder="Pilih Jabatan" />
                </SelectTrigger>
                <SelectContent>
                     <SelectGroup>
-                         <SelectItem value="ADMIN">ADMIN</SelectItem>
-                         <SelectItem value="EMPLOYED">EMPLOYED</SelectItem>
+                         <SelectItem value="HRD">HRD</SelectItem>
+                         <SelectItem value="Headchef">HeadChef</SelectItem>
+                         <SelectItem value="Kasir">Kasir</SelectItem>
+                         <SelectItem value="Bartender">Bartender</SelectItem>
+                         <SelectItem value="Chef">Chef</SelectItem>
+                         <SelectItem value="Waiter">Waiter</SelectItem>
                     </SelectGroup>
                </SelectContent>
           </Select>

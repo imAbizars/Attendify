@@ -10,9 +10,10 @@ export default function DashboardLayout() {
   const location = useLocation();
   const navigate = useNavigate();
   const getTitle = () => {
-    if (location.pathname.includes("pegawai")) return "Data Pegawai";
-    if (location.pathname.includes("absensi")) return "Data Absensi";
-    if (location.pathname.includes("laporan")) return "Laporan";
+    if (location.pathname.includes("pegawai")) return "Kelola Data Pegawai";
+    if (location.pathname.includes("absensi")) return "Kelola Rekap Data Absensi";
+    if (location.pathname.includes("izin")) return "Kelola Data Izin";
+    if (location.pathname.includes("lokasi")) return "Kelola Data lokasi";
     return "Dashboard";
   };
   

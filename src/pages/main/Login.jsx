@@ -39,7 +39,7 @@ export default function Login(){
         setLoading(true); 
         try {
             const payload = await authLogin(email, password);
-            setUserRole(payload.role);
+            setUserRole(payload.jabatan);
             setAlertSuccess(true);
             
         } catch (err) {
@@ -113,7 +113,7 @@ export default function Login(){
                             loop={false}
                             style={{width:200,height:200}}
                             onComplete={() => {
-                                if (userRole === "ADMIN") {
+                                if (userRole === "HRD") {
                                     navigate("/dashboard");
                                 } else {
                                     navigate("/home");

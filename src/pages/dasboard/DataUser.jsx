@@ -102,7 +102,7 @@ export default function DataUser(){
                 <TableCell>{user.email}</TableCell>
                 <TableCell>{user.phonenumber}</TableCell>
                 <TableCell>{user.address}</TableCell>
-                <TableCell>{user.role}</TableCell>
+                <TableCell>{user.jabatan}</TableCell>
                 <TableCell className="flex justify-center space-x-4">
                     <Button 
                     className="bg-chart-2"

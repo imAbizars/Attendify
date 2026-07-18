@@ -16,7 +16,6 @@ export default function AlertCostum({ onConfirm, children }) {
       <AlertDialogTrigger asChild>
         {children}
       </AlertDialogTrigger>
-
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Hapus Data Ini?</AlertDialogTitle>

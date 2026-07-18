@@ -14,6 +14,7 @@ import Login from "./pages/main/Login";
 import ProtectedRoute from "./lib/protected/ProtectedRoute"
 import LupaPassword from "./pages/main/LupaPasssword";
 import ResetPassword from "./pages/main/ResetPassword";
+import DataIzin from "./pages/dasboard/DataIzin";
 const queryClient = new QueryClient();
 
 export default function App(){
@@ -35,13 +36,14 @@ export default function App(){
             <Route path="/izin" element={<Izin/>}/>
           </Route>
           <Route path="/dashboard" element={
-                      <ProtectedRoute allowedRole="ADMIN">
+                      <ProtectedRoute allowedRole="HRD">
                           <DashboardLayout />
                       </ProtectedRoute>
                   }>
             <Route index element={<Dashboard/>} /> 
             <Route path="pegawai" element={<DataUser />} />
-            <Route path="absensi" element={<DataAbsensi/>} />  
+            <Route path="absensi" element={<DataAbsensi/>} />
+            <Route path="izin" element={<DataIzin/>}/>
           </Route>
         </Routes>
       </Router>
