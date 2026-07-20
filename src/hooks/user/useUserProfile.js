@@ -13,17 +13,18 @@ export const useProfile = () => {
     const [email,setEmail] = useState("");
     const [nama,setNama]  = useState("");
     const [noTelepon,setNoTelepon] = useState("");
-
+    const [jabatan,setJababatan]=useState("")  
 
     const fetchInfoUser = async () => {
         setLoading(true);
         try {
             const res = await axiosInstance.get("/user/me");
-            const {email : emailUser ,name : nama, phonenumber : noTelepon ,photo : photoUser} = res.data.data;
+            const {email : emailUser ,name : nama, phonenumber : noTelepon ,photo : photoUser,jabatan:jabatanUser} = res.data.data;
             setEmail(emailUser);
             setNama(nama);
             setNoTelepon(noTelepon);
             setPhotoProfile(photoUser);
+            setJababatan(jabatanUser);
         } catch(err) {
             setMessage("gagal mengambil data");
         } finally {
@@ -90,7 +91,7 @@ export const useProfile = () => {
         email,
         nama,
         noTelepon,
-
+        jabatan
         
     };
 };

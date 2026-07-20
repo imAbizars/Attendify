@@ -15,6 +15,7 @@ import ProtectedRoute from "./lib/protected/ProtectedRoute"
 import LupaPassword from "./pages/main/LupaPasssword";
 import ResetPassword from "./pages/main/ResetPassword";
 import DataIzin from "./pages/dasboard/DataIzin";
+import DataLokasi from "./pages/dasboard/DataLokasi";
 const queryClient = new QueryClient();
 
 export default function App(){
@@ -44,6 +45,7 @@ export default function App(){
             <Route path="pegawai" element={<DataUser />} />
             <Route path="absensi" element={<DataAbsensi/>} />
             <Route path="izin" element={<DataIzin/>}/>
+            <Route path="lokasi" element={<DataLokasi/>}/>
           </Route>
         </Routes>
       </Router>

@@ -52,7 +52,8 @@ export default function Profile() {
         infoRankUser,
         email,
         nama,
-        noTelepon
+        noTelepon,
+        jabatan
     } = useProfile();
 
     useEffect(() => {
@@ -180,8 +181,8 @@ export default function Profile() {
                         
                     />
                 </div>
-                <span className="text-xs px-3 py-1 bg-main text-white rounded-full font-medium shadow-sm border-2 border-black">
-                        🏆 {infoRankUser}
+                <span className="text-md px-3 py-1 bg-main text-white rounded-full font-bold shadow-sm border-2 border-black">
+                    {jabatan}
                 </span>
                 
                 <Card className="w-full p-4 bg-main">

@@ -27,8 +27,7 @@ import {
     Loader2,
     RefreshCw,
     CalendarIcon,
-    ArrowBigDown,
-    CalendarArrowDownIcon,
+    LocationEdit,
     ChevronDownIcon,
     User2,
     Clock,
@@ -69,8 +68,9 @@ export default function Dashboard(){
     }
     const aksesCepat = [
         {path:"/dashboard/pegawai",label:"Data Pegawai",icon:(<User2 style={{ width: 20, height: 20 }} className="shrink-0" />)},
-        {path:"/dashboard/absensi",label:"Data Absensi",icon:(<Clock style={{ width: 20, height: 20 }} className="shrink-0" />)},
-        {path:"/dashboard/laporan",label:"Data Laporan",icon:(<BookMarked style={{ width: 20, height: 20 }} className="shrink-0" />)},
+        {path:"/dashboard/absensi",label:"Rekap Absensi",icon:(<Clock style={{ width: 20, height: 20 }} className="shrink-0" />)},
+        {path:"/dashboard/izin",label:"Data Izin",icon:(<BookMarked style={{ width: 20, height: 20 }} className="shrink-0" />)},
+        {path:"/dashboard/lokasi",label:"Data Lokasi",icon:(<LocationEdit style={{ width: 20, height: 20 }} className="shrink-0" />)},
     ]
     
     return(
@@ -103,7 +103,7 @@ export default function Dashboard(){
                         {aksesCepat.map((akses)=>(
                             <Button 
                             onClick={()=>{navigate(akses.path)}}
-                            className="h-20 w-40 text-lg bg-chart-2">
+                            className="h-15 w-35 text-md bg-chart-2">
                                 {akses.icon}
                                 {akses.label}
                             </Button>
