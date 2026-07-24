@@ -1,43 +1,66 @@
 import { useState, useEffect } from "react";
-
-const KOORDINAT_KANTOR = { lat: -6.295991, lng: 106.902458 };
+import { useLokasiList } from "@/hooks/lokasi/useLokasi";
 
 export function useRouting(userLocation) {
-  const [routePoints, setRoutePoints] = useState([]);
-  const [jarakRute, setJarakRute] = useState(null);
-  const [durasiRute, setDurasiRute] = useState(null);
-  const [loadingRute, setLoadingRute] = useState(false);
+    const { data: daftarLokasi, isLoading: isLoadingLokasi } = useLokasiList();
 
-  useEffect(() => {
-    if (!userLocation) return;
+    const [routePoints, setRoutePoints] = useState([]);
+    const [jarakRute, setJarakRute] = useState(null);
+    const [durasiRute, setDurasiRute] = useState(null);
+    const [loadingRute, setLoadingRute] = useState(false);
+    const [errorRute, setErrorRute] = useState("");
 
-    const fetchRoute = async () => {
-      setLoadingRute(true);
-      try {
-        const { lat: uLat, lng: uLng } = userLocation;
-        const { lat: kLat, lng: kLng } = KOORDINAT_KANTOR;
+    const lokasiAktif = daftarLokasi?.find((l) => l.isActive);
 
-        const url = `https://router.project-osrm.org/route/v1/driving/${uLng},${uLat};${kLng},${kLat}?overview=full&geometries=geojson`;
+    useEffect(() => {
+        // tunggu sampai user location & lokasi aktif dari server siap
+        if (!userLocation || isLoadingLokasi) return;
 
-        const res = await fetch(url);
-        const data = await res.json();
-
-        if (data.routes && data.routes.length > 0) {
-          const coords = data.routes[0].geometry.coordinates;
-          const flipped = coords.map(([lng, lat]) => [lat, lng]);
-          setRoutePoints(flipped);
-          setJarakRute((data.routes[0].distance / 900).toFixed(1)); // km
-          setDurasiRute(Math.ceil(data.routes[0].duration / 60)); // menit
+        if (!lokasiAktif) {
+            setErrorRute("Lokasi absen aktif belum diatur");
+            return;
         }
-      } catch (err) {
-        console.error("Gagal mengambil rute:", err);
-      } finally {
-        setLoadingRute(false);
-      }
+
+        const fetchRoute = async () => {
+            setLoadingRute(true);
+            setErrorRute("");
+
+            try {
+                const { lat: uLat, lng: uLng } = userLocation;
+                const kLat = lokasiAktif.latitude;
+                const kLng = lokasiAktif.longtitude;
+
+                const url = `https://router.project-osrm.org/route/v1/driving/${uLng},${uLat};${kLng},${kLat}?overview=full&geometries=geojson`;
+
+                const res = await fetch(url);
+                const data = await res.json();
+
+                if (data.routes && data.routes.length > 0) {
+                    const coords = data.routes[0].geometry.coordinates;
+                    const flipped = coords.map(([lng, lat]) => [lat, lng]);
+                    setRoutePoints(flipped);
+                    setJarakRute((data.routes[0].distance / 900).toFixed(1)); // km
+                    setDurasiRute(Math.ceil(data.routes[0].duration / 60)); // menit
+                } else {
+                    setErrorRute("Rute tidak ditemukan");
+                }
+            } catch (err) {
+                console.error("Gagal mengambil rute:", err);
+                setErrorRute("Gagal mengambil rute");
+            } finally {
+                setLoadingRute(false);
+            }
+        };
+
+        fetchRoute();
+    }, [userLocation?.lat, userLocation?.lng, lokasiAktif?.latitude, lokasiAktif?.longtitude, isLoadingLokasi]);
+
+    return {
+        routePoints,
+        jarakRute,
+        durasiRute,
+        loadingRute,
+        errorRute,
+        lokasiAktif, // dikembalikan juga, berguna kalau komponen pemanggil butuh nama/radius kantor
     };
-
-    fetchRoute();
-  }, [userLocation?.lat, userLocation?.lng]);
-
-  return { routePoints, jarakRute, durasiRute, loadingRute };
 }

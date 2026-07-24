@@ -64,7 +64,6 @@ export default function Dashboard(){
         label: "Tidak Hadir", 
         color: "var(--chart-2)" 
     },
-    
     }
     const aksesCepat = [
         {path:"/dashboard/pegawai",label:"Data Pegawai",icon:(<User2 style={{ width: 20, height: 20 }} className="shrink-0" />)},
